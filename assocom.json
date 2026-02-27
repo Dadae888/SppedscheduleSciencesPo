@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1771955946987,
+    "name": "Ecophilia",
+    "content": "Bienvenue sur l'espace des communications ! Celles-ci sont disponibles pour les trois premiers membres du classement sur la dernière heure. ",
+    "image": "1771955946981.jpg",
+    "date": "2026-02-26",
+    "sectionId": "section1"
+  },
+  {
+    "id": 1771772300188,
+    "name": "Eugene Site Web ",
+    "content": "A la fin du premier jour ce créneau sera disponible ! ",
+    "image": "1771772300121.jpg",
+    "date": "2026-02-23",
+    "sectionId": "section2"
+  },
+  {
+    "id": 1772112590731,
+    "name": "Ecophilia",
+    "content": "Bienvenue sur le tout nouveau site web officiel du campus de Poitiers ! ",
+    "image": "1772112590719.JPG",
+    "date": "2026-02-27",
+    "sectionId": "section3"
+  }
+]

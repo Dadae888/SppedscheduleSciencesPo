@@ -1,0 +1,135 @@
+.day {
+    position: relative;
+    cursor: pointer;
+}
+
+/* Tooltip hidden by default */
+.day::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 110%;
+    left: 50%;
+    transform: translateX(-50%);
+    
+    background: #ff4da6;
+    color: white;
+    padding: 12px 18px;
+    border-radius: 12px;
+    
+    font-size: 16px;
+    width: 220px;
+    text-align: center;
+    
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    
+    box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+    z-index: 1000;
+}
+
+/* Show tooltip on hover */
+.day:hover::after {
+    opacity: 1;
+}
+
+.calendar-container {
+    display: flex;
+    justify-content: space-around;
+    padding: 20px;
+    gap: 20px; /* current space between months */
+    flex-wrap: wrap;
+}
+
+.month {
+    background: #111;
+    border: 2px solid #FF69B4;
+    border-radius: 10px;
+    padding: 10px;       /* slightly smaller padding */
+    flex: 1;
+    min-width: 140px;    /* reduced from 180px */
+    max-width: 180px;    /* optional: cap the size */
+    box-shadow: 0 0 15px rgba(255, 105, 180, 0.2); /* slightly smaller shadow */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: 20px; /* vertical spacing between rows */
+}
+
+/* Overlay to darken the background when form appears */
+#form-overlay {
+    display: none; /* show only when form opens */
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    z-index: 1000;
+}
+
+/* The main form container */
+#eventform2 {
+    display: none; /* hidden initially */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #111; /* dark background */
+    border: 3px solid gold;
+    border-radius: 15px;
+    padding: 30px 50px;
+    z-index: 1001;
+    box-shadow: 0 0 20px gold, 0 0 40px gold, 0 0 60px gold;
+    text-align: center;
+    width: 400px; /* adjust for large size */
+    animation: glow 2s infinite alternate;
+}
+
+/* Glow animation */
+@keyframes glow {
+    from { box-shadow: 0 0 20px gold, 0 0 40px gold, 0 0 60px gold; }
+    to { box-shadow: 0 0 40px gold, 0 0 80px gold, 0 0 100px gold; }
+}
+
+/* Input fields styling */
+#eventform2 input {
+    display: block;
+    width: 80%;
+    margin: 15px auto;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 2px solid gold;
+    background: #222;
+    color: #fff;
+    font-size: 16px;
+    text-align: center;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+/* Focus effect for inputs */
+#eventform2 input:focus {
+    border-color: #FFDF00;
+    box-shadow: 0 0 10px #FFD700;
+}
+
+/* Submit button styling */
+#eventform2 button[type="submit"] {
+    display: block;
+    margin: 20px auto 0 auto;
+    padding: 12px 25px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #111;
+    background: gold;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px gold, 0 0 20px gold inset;
+}
+
+#eventform2 button[type="submit"]:hover {
+    background: #fff;
+    color: gold;
+    transform: scale(1.05);
+    box-shadow: 0 0 20px gold, 0 0 30px gold inset;
+}

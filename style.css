@@ -1,0 +1,523 @@
+/* Make the whole background blue */
+body {
+    margin: 0;
+    padding: 0;
+    background-image: url("PHOTO1.JPG.JPG");
+	background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: white;
+}
+
+.hidden {
+    display: none !important; 
+}
+
+/* ================= Visitor Counter - Lower Left ================= */
+#visitorBox {
+    position: fixed;         /* Fixed on screen */
+    bottom: 20px;            /* 20px from bottom */
+    left: 20px;              /* 20px from left */
+    
+    background-color: rgba(255, 102, 178, 0.9); /* semi-transparent pink */
+    color: #FFD700;          /* gold text */
+    padding: 10px 15px;      /* some spacing */
+    border: 2px solid #FFD700; /* gold border */
+    border-radius: 8px;      /* rounded corners */
+    font-size: 16px;         
+    font-weight: bold;
+    
+    box-shadow: 0 0 10px #FFD700, 0 0 15px #ff66b2;
+    z-index: 10005;          /* on top of other elements */
+    
+    text-align: center;
+}
+
+/* Style the popup overlay */
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+/* Style the popup box */
+.popup {
+    display: none;
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    color: black;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Top bar container */
+.top-bar {
+    position: fixed;
+    top: 20px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 40px;
+    box-sizing: border-box;
+}
+
+/* Optional: slightly smaller buttons in header */
+.top-bar button {
+    padding: 20px 35px;
+    font-size: 16px;
+}
+
+/*Moving to the right*/
+
+.left-btn {
+	margin-left: 100 px; 
+    background: linear-gradient(45deg, #a855f7, #d946ef) !important;
+    color: white;
+    border: none;
+
+    box-shadow:
+        0 0 10px rgba(168, 85, 247, 0.6),
+        0 0 20px rgba(217, 70, 239, 0.5),
+        0 0 40px rgba(217, 70, 239, 0.3);
+
+    transition: all 0.3s ease;
+}
+
+@keyframes pulseGlow {
+    0% { box-shadow: 0 0 10px rgba(168,85,247,0.6); }
+    50% { box-shadow: 0 0 25px rgba(217,70,239,0.9); }
+    100% { box-shadow: 0 0 10px rgba(168,85,247,0.6); }
+}
+
+.left-btn {
+    animation: pulseGlow 2s infinite ease-in-out;
+}
+.right-btn {
+    margin-left: 550px;
+
+    background: linear-gradient(45deg, #ff2e9f, #ff6ec7) !important;
+    color: white;
+
+    box-shadow: 0 4px 15px rgba(255, 46, 159, 0.5);
+}
+
+/* Hover effect */
+.right-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(255, 46, 159, 0.7);
+}
+
+/* Click effect */
+.right-btn:active {
+    transform: translateY(0px);
+    box-shadow: 0 4px 15px rgba(255, 46, 159, 0.4);
+}
+
+/* Style the button */
+button {
+    padding: 20px 35px;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 10px;
+    letter-spacing: 1px;
+}
+
+/* Red button */
+button:first-of-type {
+	background: linear-gradient(45deg, #ff416c, #ff4b2b);
+    color: white;
+}
+
+/* Blue button */
+#addTextBtn {
+    background: linear-gradient(45deg, #36d1dc, #5b86e5);
+    color: white;
+}
+
+/* Hover effect */
+button:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
+
+/* Click effect */
+button:active {
+    transform: scale(0.95);
+}
+
+/* Style the text input inside popup */
+input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    margin-top: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/*bienvenue*/ 
+
+
+
+.bienvenue {
+  position: fixed;
+  top: 10px;              /* distance from top */
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 2.5rem;
+  font-weight: bold;
+  animation: clignote 1.5s linear infinite;
+  z-index: 1000;          /* ensures it stays above other elements */
+  background: linear-gradient(90deg, #ff9a9e, #fad0c4);
+}
+
+@keyframes clignote {
+  0%   { opacity: 1; }
+  50%  { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* ======= Ranking Table ======= */
+.ranking-table {
+    width: 80%;
+    max-width: 700px;
+    margin: 30px auto;
+    border-collapse: collapse;
+    background-color: #1e3a8a; /* solid blue background */
+    border: 5px solid #ffd700; /* thick golden border */
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+/* ======= Table Header ======= */
+/* ======= Ranking Table ======= */
+.ranking-table {
+    width: 80%;
+    max-width: 700px;
+    margin: 30px auto;
+    border-collapse: collapse;
+    background: linear-gradient(135deg, #ffffff, #ffe6f2);
+    border: 4px solid #ff66b2;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(255, 105, 180, 0.6),
+                0 0 40px rgba(255, 182, 193, 0.4);
+}
+
+/* ======= Table Header ======= */
+.ranking-table thead {
+    background: linear-gradient(135deg, #ff99cc, #ff66b2);
+    color: #ffffff;
+    font-size: 20px;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+}
+
+.ranking-table th {
+    padding: 15px;
+    text-align: center;
+}
+
+/* ======= Table Body ======= */
+.ranking-table tbody td {
+    padding: 12px;
+    text-align: center;
+    color: #cc0066;
+    border-bottom: 1px solid rgba(255, 105, 180, 0.4);
+}
+
+/* Row Hover Glow Effect */
+.ranking-table tbody tr:hover {
+    background-color: #fff0f7;
+    box-shadow: inset 0 0 15px rgba(255, 105, 180, 0.4);
+    transition: 0.3s ease-in-out;
+}
+
+/* === Flash machine à sous === */
+#flashLayer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+.flash-layer-active {
+    animation: slotFlash 3s linear forwards;
+}
+
+@keyframes slotFlash {
+    0%   { background: #ffd700; }
+    10%  { background: #ff0080; }
+    20%  { background: #00ffff; }
+    30%  { background: #ff8000; }
+    40%  { background: #00ff00; }
+    50%  { background: #ff00ff; }
+    60%  { background: #00ffff; }
+    70%  { background: #ff0000; }
+    80%  { background: #ffff00; }
+    90%  { background: #ff8000; }
+    100% { background: transparent; }
+}
+
+/* === Billets qui tombent === */
+#moneyContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 10000;
+}
+
+.money {
+    position: absolute;
+    width: 40px;
+    height: 20px;
+    border-radius: 4px;
+    background: linear-gradient(135deg, #b5e61d, #fff700);
+    border: 1px solid #ffd700;
+    animation: fall linear forwards;
+    filter: drop-shadow(0 0 5px gold);
+    opacity: 0.9;
+}
+
+/* Chute + scintillement */
+@keyframes fall {
+    0%   { top: -50px; opacity: 0; transform: rotate(0deg) scale(0.5); }
+    20%  { opacity: 1; transform: rotate(20deg) scale(0.7); }
+    40%  { transform: rotate(-15deg) scale(0.9); }
+    60%  { opacity: 1; transform: rotate(10deg) scale(1); }
+    80%  { transform: rotate(-5deg) scale(1.05); }
+    100% { top: 100vh; opacity: 0; transform: rotate(0deg) scale(1); }
+}
+
+#winnerTextContainer {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 25vh; /* énorme, 25% de la hauteur de la page */
+    font-weight: bold;
+    color: gold;
+    text-shadow: 2px 2px 10px #fff700, -2px -2px 10px #ff0;
+    pointer-events: none;
+    text-align: center;
+    z-index: 10001; /* au-dessus des billets */
+    opacity: 0;
+}
+
+@keyframes floatWinner {
+    0%   { opacity: 0; transform: translate(-50%, 50%) scale(0.5) rotate(-10deg); }
+    20%  { opacity: 1; transform: translate(-50%, 45%) scale(1) rotate(5deg); }
+    50%  { transform: translate(-50%, 35%) scale(1.1) rotate(-5deg); }
+    80%  { opacity: 1; transform: translate(-50%, 25%) scale(1) rotate(5deg); }
+    100% { opacity: 0; transform: translate(-50%, 0%) scale(0.8) rotate(0deg); }
+}
+
+/* ================= Strong Pink & Gold Glowy Bottom Buttons ================= */
+
+/* Apply specifically to bottom buttons */
+/* ================= Bottom Buttons - Pink & Gold Glowy ================= */
+
+/* Main button style (keeping original display, margin, padding, shape) */
+.button-gold-centered,
+.button-gold,
+.bottom-btn,
+button.bottom-btn {
+    background-color: #ff66b2;  /* Pink background */
+    color: #FFD700;             /* Gold text */
+    border: 2px solid #FFD700;  /* Gold border */
+    padding: 10px 20px;         
+    font-size: 16px;            
+    font-weight: bold;          
+    border-radius: 5px;         /* keep original shape */
+    cursor: pointer;             
+    transition: all 0.3s ease;
+
+    /* Display & spacing from your first script */
+    display: block;              
+    margin: 50px auto;           
+
+    justify-content: flex-start;  /* original alignment */
+    text-align: center;
+
+    /* Glowy effect */
+    box-shadow: 0 0 10px #FFD700, 0 0 20px #ff66b2, 0 5px 15px rgba(0,0,0,0.3);
+    z-index: 10005;              /* ensure it’s on top */
+}
+
+/* Hover effect - glow + scale */
+.button-gold-centered:hover,
+.button-gold:hover,
+.bottom-btn:hover,
+button.bottom-btn:hover {
+    background-color: #FFD700;       /* gold background on hover */
+    color: #ff66b2;                  /* pink text on hover */
+    box-shadow: 0 0 20px #FFD700, 0 0 30px #ff66b2, 0 8px 20px rgba(0,0,0,0.4);
+    transform: scale(1.05);          /* slight zoom */
+}
+
+/* Bottom container - keep your first script parameters */
+.bottom-center-container {
+    position: fixed;           
+    bottom: 20px;              
+    left: 50%;                 
+    transform: translateX(-50%); 
+    display: flex;             
+    justify-content: flex-start; 
+    gap: 15px;                 
+    z-index: 10003;            
+}
+
+/* Optional: override first-of-type if needed */
+button:first-of-type {
+    background: linear-gradient(45deg, #ff66b2, #ff99cc) !important;
+    color: #FFD700 !important;
+}
+
+.bottom-btn:hover {
+    transform: translateX(-50%) scale(1.05);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+}
+
+/* Dark overlay background */
+.attenders-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    width: 350px;
+    max-height: 500px;
+    overflow-y: auto;
+
+    padding: 25px;
+    border-radius: 20px;
+
+    background: linear-gradient(145deg, #1e1e2f, #2b2b45);
+    color: white;
+
+    box-shadow:
+        0 0 20px rgba(78,115,223,0.7),
+        0 0 40px rgba(28,200,138,0.5);
+
+    animation: popupFade 0.3s ease;
+    z-index: 1000;
+}
+
+/* Glow animation */
+@keyframes popupFade {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -55%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+.attenders-popup ul {
+    list-style: none;
+    padding: 0;
+    margin: 15px 0;
+}
+
+.attenders-popup li {
+    padding: 8px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.05);
+    margin-bottom: 6px;
+}
+
+.attenders-popup button {
+    width: 100%;
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    color: white;
+    transition: 0.3s ease;
+}
+
+/* Join button */
+#joinBtn {
+    background: linear-gradient(135deg, #1cc88a, #17a673);
+}
+
+#joinBtn:hover {
+    box-shadow: 0 0 15px #1cc88a;
+}
+
+/* Close button */
+#closeBtn {
+    background: linear-gradient(135deg, #e74a3b, #c0392b);
+}
+
+#closeBtn:hover {
+    box-shadow: 0 0 15px #e74a3b;
+}
+
+/* ================= Bottom Buttons - Pink & Glowy ================= */
+
+/* Main button style */
+.button-gold-centered,
+.button-gold {
+  background-color: #ff66b2;  /* Pink base */
+  color: #FFD700;             /* Gold text */
+  border: 2px solid #FFD700;  /* Gold border */
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: block;
+  margin: 50px auto;
+
+  /* Glowy effect */
+  box-shadow: 0 0 10px #FFD700, 0 0 20px #ff66b2, 0 0 30px #FFD700;
+}
+
+/* Hover effect */
+.button-gold-centered:hover,
+.button-gold:hover {
+  background-color: #FFD700;      /* Gold background on hover */
+  color: #ff66b2;                 /* Pink text on hover */
+  box-shadow: 0 0 15px #FFD700, 0 0 25px #ff66b2, 0 0 35px #FFD700;
+  transform: scale(1.05);         /* Slight zoom for emphasis */
+}
+
+/* Bottom container stays centered */
+.bottom-center-container {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: flex-start;
+  gap: 15px;
+  z-index: 10003;
+}

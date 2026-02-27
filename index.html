@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SpeedscheduleSciencesPo</title>
+	<link rel="stylesheet" href="style.css">
+
+    <style>
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+            border-radius: 8px;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            top: 0;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+<div id="flashLayer"></div>
+<div class="money-container" id="moneyContainer"></div>
+<!-- Conteneur pour le texte gagnant -->
+<div id="winnerTextContainer"></div>
+
+<div id="eventBox" style="
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 250px;
+    max-height: 300px;
+    overflow-y: auto;
+    background: rgba(0,0,0,0.7);
+    color: white;
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 14px;
+    z-index: 10002;
+"></div>
+
+<table id="ranking-container" class="ranking-table">
+    <thead>
+        <tr>
+            <th>Position</th>
+            <th>Association</th>
+            <th>Crédits</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+<div class="popup" id="creditPopup" style="display:none;">
+    <h3>Ajouter des crédits à une association</h3>
+    <label for="asso-name">Nom de l'association :</label>
+    <input type="text" id="asso-name" placeholder="Ex: Ecophilia">
+    <br><br>
+    <label for="credits">Nombre de crédits :</label>
+    <input type="number" id="credits" placeholder="Ex: 2">
+    <br><br>
+    <button onclick="closeCreditPopup()" id= "submitCreditsBtn">Ajouter</button>
+    <button onclick="closeCreditPopup()">Annuler</button>
+</div>
+
+
+<script>
+function openpage3() {
+    window.open("page3.html", "_blank");
+}
+</script>
+
+*
+
+
+
+<div id="visitorBox">
+    Visitors: <span id="visitorCount"></span>
+</div>
+
+
+<div class="top-bar">
+	<button 
+		class="left-btn" 
+		style="background-color: red ; " 
+		onclick="openPopup()">
+		Consulter/Ajouter des évènements
+		</button>
+		<button 
+	class="right-btn" 
+    id="addTextBtn"
+    style="background-color: blue;"
+	onclick="openPopup2()">
+    Donner des crédits $
+  </button>
+ 
+
+
+<h1 class="bienvenue">Bienvenue</h1>
+
+<div class="overlay" id="overlay"></div>
+<div id="greetingText" style="margin-top: 20px; font-size: 24px;"></div>
+
+<div class="popup" id="popup2">
+    <h3>Vous allez participer au classement des associations. Les crédits correspondent à l'intérêt que vous portez aux évènements. Vous disposez d'un maximum de 3 crédits à dépenser par jour. Par mesure de sécurité, quel est votre nom ?</h3>
+    <input type="text" id="username2" placeholder="Your name">
+    <br><br>
+    <button id="submitBtn2">Submit</button>
+    <button onclick="closePopup2()">Cancel</button>
+</div>
+
+
+<div class="popup" id="popup">
+    <h3>Vous allez consulter l'agenda des évènements du campus de Poitiers. Par mesure de sécurité, quel est votre nom ?</h3>
+    <input type="text" id="username" placeholder="Your name">
+    <br><br>
+    <button id="submitBtn">Submit</button>
+    <button onclick="closePopup()">Cancel</button>
+</div>
+
+<div class="bottom-center-container">
+  <button class="button-gold bottom-btn" onclick="openpage3()">Page des communications</button>
+  <button class="button-gold" onclick="openpage4()">Dates clés à connaître</button>
+</div>
+
+<script src="script.js"></script>
+
+
+</body>
+</html>

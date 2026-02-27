@@ -1,0 +1,188 @@
+/* ===== BODY ===== */
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #1a0a1a, #2a0a2a, #3a0a3a); /* dark purple/pink gradient */
+    color: white;
+}
+
+/* ===== MAIN TITLE ===== */
+.main-title {
+    text-align: center;
+    font-size: 2.5rem;
+    margin: 40px 0;
+    font-weight: 700;
+    letter-spacing: 2px;
+    background: linear-gradient(90deg, #ff69b4, #ffb6c1); /* pink gradient */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* ===== PROMO CONTAINER ===== */
+.promo-container {
+    width: 90%;
+    max-width: 1200px;
+    margin: auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px; /* space between boxes */
+    justify-content: center;
+}
+
+/* ===== PROMO SECTION ===== */
+.promo-section {
+    position: relative;
+    padding: 40px 30px;
+    border-radius: 20px;
+    backdrop-filter: blur(15px);
+    background: rgba(0, 0, 0, 0.2);
+    border: 2px solid #ff69b4; /* pink border */
+    box-shadow: 0 0 20px #ff69b4, 0 0 30px gold, 0 0 40px gold; /* glowing pink + gold */
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    flex: 1 1 300px;
+    max-width: 400px;
+}
+
+.promo-section:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 0 25px #ff69b4, 0 0 40px gold, 0 0 60px gold; /* intensified glow on hover */
+}
+
+/* ===== IMAGE ===== */
+.promo-img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 15px #ff69b4, 0 0 25px gold;
+}
+
+/* ===== TEXT ===== */
+.asso-name {
+    font-size: 1.8rem;
+    margin-bottom: 12px;
+    font-weight: 600;
+    color: #ff69b4;
+}
+
+.promo-text {
+    font-size: 1rem;
+    line-height: 1.6;
+    opacity: 0.95;
+}
+
+/* ===== BUTTON ===== */
+.fill-btn {
+    margin-top: 20px;
+    padding: 10px 25px;
+    font-size: 15px;
+    font-weight: bold;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    background: linear-gradient(135deg, #ff69b4, gold);
+    color: #1a0a1a;
+    box-shadow: 0 0 10px #ff69b4, 0 0 20px gold;
+    transition: all 0.3s ease;
+}
+
+.fill-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px #ff69b4, 0 0 35px gold;
+}
+
+/* ===== FORM ===== */
+.promo-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.promo-form input[type="text"],
+.promo-form textarea,
+.promo-form input[type="file"] {
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    font-size: 1rem;
+    outline: none;
+    background: rgba(255,105,180,0.15); /* pink translucent background */
+    color: white;
+    box-shadow: 0 0 5px #ff69b4, 0 0 10px gold;
+}
+
+.promo-form textarea {
+    resize: none;
+    height: 100px;
+}
+
+.promo-form button {
+    padding: 12px;
+    border-radius: 25px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    background: linear-gradient(135deg, #ff69b4, gold);
+    color: #1a0a1a;
+    box-shadow: 0 0 10px #ff69b4, 0 0 20px gold;
+    transition: 0.3s;
+}
+
+.promo-form button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px #ff69b4, 0 0 35px gold;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .main-title {
+        font-size: 2rem;
+    }
+
+    .promo-section {
+        padding: 25px 20px;
+    }
+
+    .promo-img {
+        height: 180px;
+    }
+}
+
+/* Container that holds ranking buttons */
+/* Container that holds ranking buttons */
+#ranking-buttons {
+    display: flex;
+    justify-content: center;  /* center horizontally */
+    gap: 20px;                /* space between buttons */
+    margin-bottom: 30px;      /* space above form/calendar */
+    flex-wrap: wrap;          /* wrap on small screens */
+}
+
+/* Default ranking button style */
+.ranking-btn {
+    padding: 10px 25px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1rem;
+    color: #1a0a1a;
+    background: linear-gradient(135deg, #ff69b4, gold); /* pink + gold gradient */
+    box-shadow: 0 0 8px #ff69b4, 0 0 15px gold;
+    transition: all 0.3s ease;
+}
+
+/* Hover effect */
+.ranking-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px #ff69b4, 0 0 30px gold;
+}
+
+/* Selected button style */
+.ranking-btn.selected {
+    background: linear-gradient(135deg, gold, #ff69b4);
+    box-shadow: 0 0 15px gold, 0 0 25px #ff69b4;
+    color: #1a0a1a;
+}
