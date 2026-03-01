@@ -3,6 +3,7 @@ let ranking=[];
 let readyRegistration; // global-ish
 let subscription; 
 let showFullRanking = false;
+let data4;
 
 // Pour vider les fichiers, utiliser echo//
 // Key definition of variables : function parameter such as displayRanking(ranking) is a variable that is created when the function runs but exists only inside the function//
@@ -44,7 +45,7 @@ function getUserId() {
 // Then use userid to custom triggernot// 
 
 async function uploadID() { 
-	getUserId() ; 
+	const userId = getUserId() ; 
 	const responseID = await fetch('/api/verifyID', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -133,8 +134,8 @@ async function openPopup() {
 	//That calls for the elemnt in HTML with the id popup 
 	const userId = getUserId(); 
 	const response = await fetch("/api/verifyID");
-	const data = await response.json(); // this parses JSON automatically
-	if (data.includes(userId)) { 
+	const data4 = await response.json(); // this parses JSON automatically
+	if (data4.includes(userId)) { 
 		openpage2(); 
 	} else {
 		uploadID() ; 

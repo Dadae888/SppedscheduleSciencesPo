@@ -98,28 +98,40 @@ app.use(express.static(__dirname));
 const USERID_FILES = 'userid.json';
 
 if (!fs.existsSync(USERID_FILES)) {
-    fs.writeFileSync(USERID_FILES, JSON.stringify({}));
+    fs.writeFileSync(USERID_FILES, JSON.stringify([]));
 }
 
 // First request : when file is asked in opening popup or not ?// 
 app.get('/api/verifyID', (req, res) => {
     const userfiles= JSON.parse(fs.readFileSync(USERID_FILES, 'utf8'));
     // convertit JSON en tableau JS
-    res.json({
-		userfiles: userfiles 
-	});
+    res.json(userfiles); 
 		// renvoie le tableau au client, qui est vide la première fois
 });
 
 app.post('/api/verifyID', (req, res) => { 
-	const user_id = req.body.userId; 
-	if (!user_id) { 
-		return res.status(400).json({error : 'Missing fields'}); 
-	}
-	fs.writeFileSync(USERID_FILES, JSON.stringify(user_id, null, 2));
-	console.log(user_id);
-	res.json({ success: true }); //allows fetch to stop hanging//
-}); 
+    const user_id = req.body.userId; 
+    if (!user_id) { 
+        return res.status(400).json({error : 'Missing fields'}); 
+    }
+
+    let data = [];
+    try {
+        data = JSON.parse(fs.readFileSync(USERID_FILES, 'utf8'));
+        if (!Array.isArray(data)) data = [];
+    } catch (err) {
+        data = []; // if file empty or invalid
+    }
+
+    // Avoid duplicates
+    if (!data.includes(user_id)) {
+        data.push(user_id);
+        fs.writeFileSync(USERID_FILES, JSON.stringify(data, null, 2));
+    }
+
+    console.log("Current users:", data);
+    res.json({ success: true });
+});
 
 // making sure 
 
