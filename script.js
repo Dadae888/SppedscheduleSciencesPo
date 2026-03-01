@@ -39,9 +39,24 @@ function getUserId() {
 		return userId; 
 		// La fonction retourne userId // 
 	}
+	uploadID(); 
 	return userId; 
 }
 // Then use userid to custom triggernot// 
+
+async function uploadID() { 
+	const responseID = await fetch('/api/verifyID', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId : userId })
+		// le body = tout ce qui est envoyé, dedans on demande l'éxécution de la fonction getUserId//
+    });
+	const result = await responseID.json(); 
+}
+
+async function checkID() { 
+	
+	
 
 // notifications 
 async function triggernot() {
@@ -511,4 +526,5 @@ window.addEventListener('DOMContentLoaded', () => {
     loadRanking();
     loadsw();
 });
+
 setInterval(fetchrecentevents, 2000);
