@@ -129,12 +129,12 @@ function urlBase64ToUint8Array(base64String) {
 
 //The following code ensures the opening of the popup box when button is clicked
 
-function openPopup() {
+async function openPopup() {
 	//That calls for the elemnt in HTML with the id popup 
-	getUserId(); 
+	const userId = getUserId(); 
 	const response = await fetch("/api/verifyID");
 	const data = await response.json(); // this parses JSON automatically
-	if data.users.includes(userId) { 
+	if (data.users.includes(userId)) { 
 		openpage2(); 
 	} else {
 		uploadID() ; 
@@ -540,5 +540,6 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 setInterval(fetchrecentevents, 2000);
+
 
 
