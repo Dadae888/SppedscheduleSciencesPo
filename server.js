@@ -102,15 +102,25 @@ if (!fs.existsSync(USERID_FILES)) {
 }
 
 // First request : when file is asked in opening popup or not ?// 
-app.get('/', (req, res) => {
-    const ranking = JSON.parse(fs.readFileSync(RANKING_FILE, 'utf8'));
-    const votes = JSON.parse(fs.readFileSync(VOTES_FILE, 'utf8'));              // convertit JSON en tableau JS
+app.get('/api/verifyID', (req, res) => {
+    const userfiles= JSON.parse(fs.readFileSync(USERID_FILES, 'utf8'));
+    // convertit JSON en tableau JS
     res.json({
-		ranking: ranking, 
-		votes: votes
+		userfiles: userfiles 
 	});
 		// renvoie le tableau au client, qui est vide la première fois
 });
+
+app.post('/api/verifyID', (req, res) => { 
+	const user_id = req.body.Topthree; 
+	if (!Topthree) { 
+		return res.status(400).json({error : 'Missing fields'}); 
+	}
+	fs.writeFileSync(ranking3, JSON.stringify(Topthree, null, 2));
+	console.log(Topthree);
+	res.json({ success: true }); //allows fetch to stop hanging//
+}); 
+
 // making sure 
 
 //Creating file 
@@ -571,5 +581,6 @@ app.post("/send", async (req, res) => {
 
 	res.sendStatus(200); // optional but recommended
 });
+
 
 
