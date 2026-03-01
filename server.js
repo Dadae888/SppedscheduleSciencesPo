@@ -112,12 +112,12 @@ app.get('/api/verifyID', (req, res) => {
 });
 
 app.post('/api/verifyID', (req, res) => { 
-	const user_id = req.body.Topthree; 
-	if (!Topthree) { 
+	const user_id = req.body.userId; 
+	if (!user_id) { 
 		return res.status(400).json({error : 'Missing fields'}); 
 	}
-	fs.writeFileSync(ranking3, JSON.stringify(Topthree, null, 2));
-	console.log(Topthree);
+	fs.writeFileSync(USERID_FILES, JSON.stringify(user_id, null, 2));
+	console.log(user_id);
 	res.json({ success: true }); //allows fetch to stop hanging//
 }); 
 
@@ -581,6 +581,7 @@ app.post("/send", async (req, res) => {
 
 	res.sendStatus(200); // optional but recommended
 });
+
 
 
 
