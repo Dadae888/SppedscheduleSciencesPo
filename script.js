@@ -134,19 +134,19 @@ async function openPopup() {
 	const userId = getUserId(); 
 	const response = await fetch("/api/verifyID");
 	const data = await response.json(); // this parses JSON automatically
-	if (data.users.includes(userId)) { 
+	if (data.includes(userId)) { 
 		openpage2(); 
 	} else {
 		uploadID() ; 
+		    document.getElementById("popup").style.display = "block";
+   			document.getElementById("overlay").style.display = "block";
 	} 
 }
 		
 		
 	
-    document.getElementById("popup").style.display = "block";
-    document.getElementById("overlay").style.display = "block";
-	// block actually means make it visible
-}
+    
+
 
 async function closePopup() {
 	console.log("close popup is been executed")
@@ -540,6 +540,7 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 setInterval(fetchrecentevents, 2000);
+
 
 
 
