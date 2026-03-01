@@ -44,6 +44,7 @@ function getUserId() {
 // Then use userid to custom triggernot// 
 
 async function uploadID() { 
+	getUserId() ; 
 	const responseID = await fetch('/api/verifyID', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -130,6 +131,7 @@ function urlBase64ToUint8Array(base64String) {
 
 function openPopup() {
 	//That calls for the elemnt in HTML with the id popup 
+	getUserId(); 
 	const response = await fetch("/api/verifyID");
 	const data = await response.json(); // this parses JSON automatically
 	if data.users.includes(userId) { 
@@ -538,4 +540,5 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 setInterval(fetchrecentevents, 2000);
+
 
