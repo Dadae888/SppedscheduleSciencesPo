@@ -94,6 +94,23 @@ app.post('/submit-name', (req, res) => {
 
 app.use(express.static(__dirname));
 
+// User id check 
+const USERID_FILES = 'userid.json';
+
+if (!fs.existsSync(USERID_FILES)) {
+    fs.writeFileSync(USERID_FILES, JSON.stringify({}));
+}
+
+// First request : when file is asked in opening popup or not ?// 
+app.get('/', (req, res) => {
+    const ranking = JSON.parse(fs.readFileSync(RANKING_FILE, 'utf8'));
+    const votes = JSON.parse(fs.readFileSync(VOTES_FILE, 'utf8'));              // convertit JSON en tableau JS
+    res.json({
+		ranking: ranking, 
+		votes: votes
+	});
+		// renvoie le tableau au client, qui est vide la première fois
+});
 // making sure 
 
 //Creating file 
@@ -554,4 +571,5 @@ app.post("/send", async (req, res) => {
 
 	res.sendStatus(200); // optional but recommended
 });
+
 
