@@ -39,7 +39,6 @@ function getUserId() {
 		return userId; 
 		// La fonction retourne userId // 
 	}
-	uploadID(); 
 	return userId; 
 }
 // Then use userid to custom triggernot// 
@@ -54,7 +53,7 @@ async function uploadID() {
 	const result = await responseID.json(); 
 }
 
-async function checkID() { 
+ 
 	
 	
 
@@ -131,6 +130,17 @@ function urlBase64ToUint8Array(base64String) {
 
 function openPopup() {
 	//That calls for the elemnt in HTML with the id popup 
+	const response = await fetch("/api/verifyID");
+	const data = await response.json(); // this parses JSON automatically
+	if data.users.includes(userId) { 
+		openpage2(); 
+	} else {
+		uploadID() ; 
+	} 
+}
+		
+		
+	
     document.getElementById("popup").style.display = "block";
     document.getElementById("overlay").style.display = "block";
 	// block actually means make it visible
@@ -528,3 +538,4 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 setInterval(fetchrecentevents, 2000);
+
