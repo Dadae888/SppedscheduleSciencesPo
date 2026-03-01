@@ -3,6 +3,7 @@ let ranking=[];
 let readyRegistration; // global-ish
 let subscription; 
 let showFullRanking = false;
+let data4;
 
 // Pour vider les fichiers, utiliser echo//
 // Key definition of variables : function parameter such as displayRanking(ranking) is a variable that is created when the function runs but exists only inside the function//
@@ -42,6 +43,21 @@ function getUserId() {
 	return userId; 
 }
 // Then use userid to custom triggernot// 
+
+async function uploadID() { 
+	const userId = getUserId() ; 
+	const responseID = await fetch('/api/verifyID', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId : userId })
+		// le body = tout ce qui est envoyé, dedans on demande l'éxécution de la fonction getUserId//
+    });
+	const result = await responseID.json(); 
+}
+
+ 
+	
+	
 
 // notifications 
 async function triggernot() {
@@ -114,12 +130,24 @@ function urlBase64ToUint8Array(base64String) {
 
 //The following code ensures the opening of the popup box when button is clicked
 
-function openPopup() {
+async function openPopup() {
 	//That calls for the elemnt in HTML with the id popup 
-    document.getElementById("popup").style.display = "block";
-    document.getElementById("overlay").style.display = "block";
-	// block actually means make it visible
+	const userId = getUserId(); 
+	const response = await fetch("/api/verifyID");
+	const data4 = await response.json(); // this parses JSON automatically
+	if (data4.includes(userId)) { 
+		openpage2(); 
+	} else {
+		uploadID() ; 
+		    document.getElementById("popup").style.display = "block";
+   			document.getElementById("overlay").style.display = "block";
+	} 
 }
+		
+		
+	
+    
+
 
 async function closePopup() {
 	console.log("close popup is been executed")
@@ -511,4 +539,9 @@ window.addEventListener('DOMContentLoaded', () => {
     loadRanking();
     loadsw();
 });
+
 setInterval(fetchrecentevents, 2000);
+
+
+
+
