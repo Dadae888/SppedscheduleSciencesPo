@@ -1,10 +1,29 @@
 //creating untangible variables 
 // importing libraries 
+
+/* Google calendar id client id first then secret id
+604858021810-16tmdq2p05h5nsg16v5p2s40dft7go22.apps.googleusercontent.com
+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 */ 
+
+
 // Post means : sending data to modify it//
 // Get means : retrieve data from the server//
 // Remember : if you wanna keep the data, you gotta create a json file with filesync, no other way// 
 const express = require('express');
 const bodyParser = require('body-parser'); 
+const session = require('express-session');
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const { google } = require('googleapis');
+
+// Secret environment// 
+require('dotenv').config();
+
+const CLIENT_ID = process.env.CLIENT_ID;
+const CLIENT_SECRET = process.env.CLIENT_SECRET;
+
+
+
 // Loading file system module 
 const fs = require('fs') ;
 const COUNTER_FILE = 'counter.txt';
@@ -32,7 +51,15 @@ if (!fs.existsSync(assocom)) {
 const multer = require('multer');
 
 
+// Making privacy file public// 
 
+app.get('/privacy-policy', (req, res) => {
+  res.sendFile(__dirname + '/public/privacy-policy.html');
+});
+
+app.get('/terms-of-service', (req, res) => {
+  res.sendFile(__dirname + '/public/terms-of-service.html');
+});
 // Starting real code for uploads //
 // Node path module// 
 const path = require('path');
@@ -85,12 +112,178 @@ if (!fs.existsSync(RANKING_FILE)) {
     fs.writeFileSync(RANKING_FILE, JSON.stringify([]));
 }
 
+
+
+
+// CALENDAR//
+
+
+
+// Other necessary parameters for calendar// 
+// Session is a way to store data, accross multiple HTTP requests : so when user connects again, cookie sends id and retrieves info of session// 
+// Order matters, we can use as many app use as we want, it just means that when requests are sent we add middlewares, but we must first initialise session, then passport// 
+// Order : 1 : initialising session)// 
+/* architecture : when request comes (await), first go through middleware then route handler, which is app get*/ 
+
+app.use(session({
+	secret: CLIENT_SECRET, 
+	resave: false, // If nothing changed no resave// 
+	saveUninitialized: false
+})) 
+
+// Order : 2 : now initialise passport, has to be after session : it ads login to req// 
+// Precision : it doesn't force login : it checks login info through req.user. Now every request goes through a login check. No force login// 
+app.use(passport.initialize()); 
+//Order : 3 now link passport to section// 
+// Same thing here : does req.user contain valid cookie ? If yes, session logged, if not, req.user undefinded// 
+app.use(passport.session()); 
+
+// Telling passport how to setup login ; go through google //
+// Next line means : when someone tries to login, use this strategy//  
+
+passport.use(new GoogleStrategy(
+{ //giving first parameter ; configuration id// 
+	clientID: CLIENT_ID,
+    clientSecret: CLIENT_SECRET,
+    callbackURL: 'http://localhost:8000/auth/google/callback' // That's where google redirects, it must match exactly// 
+}, 
+// Now second parameter : callback function : it is a function that runs for every request going through that path ; in express call back function always has req, res, and next (allows to move on to next middleware//
+// this functions runs after login and allowing permissions and google sendback// 
+// These are parameters of function : accesstoken is used for google calendar ; second is to get new one when expired; profile is all info (name etc) ; done is provided by passport to state success //
+// Creating user object manually//  
+(accessToken, refreshToken, profile, done) => { 
+	const user = {  
+		profile: profile,
+		accessToken: accessToken
+	};
+	return done(null, user); 
+}
+)); 
+
+// Then : storing user to passport session, but serialise allows to select information about user to store// 
+// user here will be profile + accesstoken// 
+// Next are function we call with passport// 
+
+passport.serializeUser((user, done) => {
+  done(null, user);
+});
+
+// Next function means : take user stored in session and convert it back to a full user object for this request// 
+
+passport.deserializeUser((user, done) => {
+  done(null, user);
+});
+
+// Now done returns REQ.USER for every route !!// 
+
 // Endpoint to receive user data from script.js
 app.post('/submit-name', (req, res) => {
     nameentered = req.body.username;      // grab "username" field from POST
     console.log("User entered:", nameentered);  // prints it in CMD
     res.send("Hi " + nameentered + "! Your name was received."); // optional response for user
 });
+
+// Finally : setting routes : we first need a get for login, with a callback (what happens after user accepted login// 
+
+app.get('/auth/google', 
+	// Telling passport to use google strategy with scope of permissions// 
+	passport.authenticate('google', {
+		scope : [
+			'profile',
+			'email', 
+			'https://www.googleapis.com/auth/calendar.events'
+			]
+	}) 
+); 
+
+// To call this route, we will need a window location so that request doesn't run in background like it does with fetch : window.location.href = '/auth/google';//
+
+// Next : after login permission// 
+// This function is magic set by passport : basically : passport uses google strategy to : POST a request to google, through a code given when callback called//
+// Then, google sends JSON file with accesstoken, etc// 
+// Then, passport calls the callback function in strategy : storing info// 
+// And when the done of the callback function is called, serialise and deserialise is used to store into session. Pure magic// 
+// Now req user exists, so basically that get function was just a way to call all our functions defined before//
+// And the response is to redirect somewhere//  
+/* [Browser clicks login]
+      |
+      v
+[GET /auth/google] -- Passport redirects --> [Google Login Page]
+      |
+      v
+[User logs in, grants access] -- Google redirects with code --> [GET /auth/google/callback]
+      |
+      v
+[Passport exchanges code for tokens]
+      |
+      v
+[GoogleStrategy callback(accessToken, refreshToken, profile)]
+      |
+      v
+[serializeUser stores user ID in session]
+      |
+      v
+[req.user is set, next() is called]
+      |
+      v
+[Your route handler executes, e.g., res.redirect('/')] 
+*/ 
+
+app.get('/auth/google/callback', 
+	passport.authenticate('google', { failureRedirect: '/' }),
+	(req, res) => {
+    // User is logged in at this point
+    res.redirect('/calendar'); // <-- redirect to the calendar page, be careful, here it is a route not a filepath, so calendar route must be defined// 
+	}
+);
+
+// Creating redirection route// 
+app.get('/calendar', (req,res) => {
+	if (!req.user) return res.redirect('/'); // That's my homepage// Return ensures rest of the route is not executed// 
+	res.redirect('https://speedschedulesciencespo.fr/page2.html');
+}); 
+
+
+
+// Then, add event to google calendar route !!!!!// 
+app.post('/add-to-calendar', async (req, res) => {
+
+  if (!req.user) {
+    return res.redirect('/auth/google');
+  }
+	// Setting token for this session// 
+  const oauth2Client = new google.auth.OAuth2();
+  oauth2Client.setCredentials({
+    access_token: req.user.accessToken
+  });
+
+  const calendar = google.calendar({ version: 'v3', auth: oauth2Client });
+	// So now frontend needs to correspond ! // 
+  const event = {
+    summary: req.body.summary,
+    description: req.body.description,
+    start: { dateTime: req.body.start, timeZone: 'Europe/Paris' },
+    end: { dateTime: req.body.end, timeZone: 'Europe/Paris' }
+  };
+
+  try {
+    await calendar.events.insert({
+      calendarId: 'primary',
+      resource: event
+    });
+
+    res.json({ success: true, message: "Event added to Google Calendar" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+	
+
+
+
+
+
 
 app.use(express.static(__dirname));
 

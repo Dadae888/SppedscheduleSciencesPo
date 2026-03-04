@@ -136,6 +136,33 @@ function openpage3() {
   <button class="button-gold" onclick="openpage4()">Dates clés à connaître</button>
 </div>
 
+
+<footer>
+  <a href="/privacy-policy">Politique de confidentialité</a> |
+  <a href="/terms-of-service">Conditions d'utilisation</a>
+</footer>
+<style>
+footer {
+  position: fixed;      /* fixe le footer à l'écran */
+  bottom: 10px;         /* 10px du bas */
+  right: 10px;          /* 10px de la droite */
+  font-size: 0.7em;     /* texte très petit */
+  color: #555;          /* couleur grise */
+  background: transparent; /* pas de fond */
+  z-index: 1000;        /* toujours au-dessus du contenu */
+}
+
+footer a {
+  color: #555;           /* même couleur pour les liens */
+  text-decoration: none; /* supprime le soulignement */
+  margin: 0 3px;         /* petit espace entre les liens */
+}
+
+footer a:hover {
+  text-decoration: underline; /* souligne au survol */
+}
+</style>
+	
 <script src="script.js"></script>
 
 
