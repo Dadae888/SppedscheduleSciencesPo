@@ -24,7 +24,7 @@ self.addEventListener('push', event => { // event is now the payload we received
 // 3️⃣ Display the notification
 event.waitUntil(
   self.registration.showNotification("✨ " + data.title + " ✨", {
-    body: "💖 " + data.body + "\n\n🔥 Inscrivez-vous vite !",
+    body: "💖 " + data.body + "\n\n🔥 Inscrivez-vous vie !",
     
     icon: "/icone.png",          // small icon (required)
     badge: "/badge.png",         // monochrome small icon (Android status bar)
@@ -62,5 +62,4 @@ self.addEventListener('notificationclick', event => {
   event.waitUntil(
     clients.openWindow('/') // You can customize the URL
   );
-
 });

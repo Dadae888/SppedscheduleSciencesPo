@@ -521,3 +521,29 @@ button:first-of-type {
   gap: 15px;
   z-index: 10003;
 }
+
+#login-google {
+  position: fixed;       /* reste en haut à droite */
+  top: 10px;             /* un peu plus proche du haut */
+  right: 10px;           /* un peu plus proche de la droite */
+  padding: 6px 14px;     /* bouton plus petit */
+  font-size: 0.85rem;    /* texte plus petit */
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(145deg, #FFD700, #FFC107); /* doré subtil */
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(255, 215, 0, 0.6); /* légère ombre */
+  transition: all 0.2s ease-in-out;
+  z-index: 1000;         /* reste au-dessus mais moins extrême */
+}
+
+/* Hover subtil */
+#login-google:hover {
+  transform: translateY(-2px); /* léger mouvement */
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.8); /* glow plus doux */
+}
+
+/* Remove clignering animation completely */
+

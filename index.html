@@ -3,9 +3,6 @@
 <head>
     <title>SpeedscheduleSciencesPo</title>
 	<link rel="stylesheet" href="style.css">
-	<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5743831667159083"
-     crossorigin="anonymous"></script>
-	<meta name='impact-site-verification' value='42a9398b-1e27-43bb-8b27-2f264e2d61cd'>
 
     <style>
         .popup {
@@ -136,7 +133,17 @@ function openpage3() {
   <button class="button-gold" onclick="openpage4()">Dates clés à connaître</button>
 </div>
 
+<script src="script.js"></script>
 
+<button id="login-google">Login 
+</button>
+
+<script>
+  document.getElementById('login-google').addEventListener('click', () => {
+    // This will redirect the browser to your Google login route
+    window.location.href = '/auth/google';
+  });
+</script>
 <footer>
   <a href="/privacy-policy">Politique de confidentialité</a> |
   <a href="/terms-of-service">Conditions d'utilisation</a>
@@ -162,12 +169,7 @@ footer a:hover {
   text-decoration: underline; /* souligne au survol */
 }
 </style>
-	
-<script src="script.js"></script>
 
 
 </body>
 </html>
-
-
-

@@ -65,7 +65,6 @@ function submitForm(event, sectionId) {
 	console.log("here is" + selectedAsso);
 	if (!name) { 
 		alert("you must select an association"); 
-		return ; 
 	} 
     const text = form.querySelector("textarea").value;
     const fileInput = form.querySelector("input[type='file']");
@@ -169,5 +168,4 @@ async function loadPromos() {
 		console.log("for each promo was ran") 
 	})
 };
-
 	
