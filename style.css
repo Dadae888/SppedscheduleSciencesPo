@@ -546,4 +546,41 @@ button:first-of-type {
 }
 
 /* Remove clignering animation completely */
+/* Google Calendar Disclosure - SpeedSchedule */
+.google-calendar-disclosure {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    max-width: 320px;
+    background: rgba(0, 0, 0, 0.92);
+    color: #ffffff;
+    padding: 16px 18px;
+    border-radius: 14px;
+    font-size: 13px;
+    line-height: 1.5;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(6px);
+    z-index: 9999;
+    opacity: 0.9;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.google-calendar-disclosure:hover {
+    opacity: 1;
+    transform: translateY(-3px);
+}
+
+.google-calendar-disclosure strong {
+    font-weight: 600;
+}
+
+.google-calendar-disclosure a {
+    color: #4da3ff;
+    text-decoration: none;
+}
+
+.google-calendar-disclosure a:hover {
+    text-decoration: underline;
+}
 
