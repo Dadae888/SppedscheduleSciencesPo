@@ -15,6 +15,26 @@ body {
     color: white;
 }
 
+/* ================== Google Login Button ================== */
+/* Place this at the very bottom of your CSS to override previous button rules */
+/* ================== Bottom Center Container ================== */
+
+
+
+/* Bottom bar container */
+.bottom-center-container {
+    position: fixed;
+    bottom: 20px;           /* bottom buttons' base */
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    z-index: 10003;
+}
+
+/* Google login button */
+
 .hidden {
     display: none !important; 
 }
@@ -103,6 +123,7 @@ body {
 
 .left-btn {
     animation: pulseGlow 2s infinite ease-in-out;
+	background: linear-gradient(45deg, #ff2e9f, #ff6ec7) !important;
 }
 .right-btn {
     margin-left: 550px;
@@ -341,10 +362,8 @@ input[type="text"] {
 
 /* Main button style (keeping original display, margin, padding, shape) */
 .button-gold-centered,
-.button-gold,
-.bottom-btn,
+.button-gold,.bottom-btn,
 button.bottom-btn {
-    background-color: #ff66b2;  /* Pink background */
     color: #FFD700;             /* Gold text */
     border: 2px solid #FFD700;  /* Gold border */
     padding: 10px 20px;         
@@ -378,22 +397,10 @@ button.bottom-btn:hover {
 }
 
 /* Bottom container - keep your first script parameters */
-.bottom-center-container {
-    position: fixed;           
-    bottom: 20px;              
-    left: 50%;                 
-    transform: translateX(-50%); 
-    display: flex;             
-    justify-content: flex-start; 
-    gap: 15px;                 
-    z-index: 10003;            
-}
+
 
 /* Optional: override first-of-type if needed */
-button:first-of-type {
-    background: linear-gradient(45deg, #ff66b2, #ff99cc) !important;
-    color: #FFD700 !important;
-}
+
 
 .bottom-btn:hover {
     transform: translateX(-50%) scale(1.05);
@@ -522,35 +529,16 @@ button:first-of-type {
   z-index: 10003;
 }
 
-#login-google {
-  position: fixed;       /* reste en haut à droite */
-  top: 10px;             /* un peu plus proche du haut */
-  right: 10px;           /* un peu plus proche de la droite */
-  padding: 6px 14px;     /* bouton plus petit */
-  font-size: 0.85rem;    /* texte plus petit */
-  font-weight: 600;
-  color: #fff;
-  background: linear-gradient(145deg, #FFD700, #FFC107); /* doré subtil */
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  box-shadow: 0 2px 6px rgba(255, 215, 0, 0.6); /* légère ombre */
-  transition: all 0.2s ease-in-out;
-  z-index: 1000;         /* reste au-dessus mais moins extrême */
-}
 
-/* Hover subtil */
-#login-google:hover {
-  transform: translateY(-2px); /* léger mouvement */
-  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.8); /* glow plus doux */
-}
 
 /* Remove clignering animation completely */
+
 /* Google Calendar Disclosure - SpeedSchedule */
 .google-calendar-disclosure {
     position: fixed;
     bottom: 20px;
     right: 20px;
+	padding: 20px 35px;
     max-width: 320px;
     background: rgba(0, 0, 0, 0.92);
     color: #ffffff;
@@ -583,4 +571,50 @@ button:first-of-type {
 .google-calendar-disclosure a:hover {
     text-decoration: underline;
 }
+.google-login-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
 
+    /* Smaller than bottom buttons */
+    padding: 8px 18px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 8px;
+
+    background-color: white !important;  /* white background */
+    color: #444;
+
+    cursor: pointer;
+    transition: all 0.25s ease;
+
+    /* Glow effect */
+    box-shadow: 0 0 8px #FFD700, 0 0 15px #ff66b2, 0 4px 10px rgba(0,0,0,0.3);
+
+    /* Positioned above bottom buttons */
+    position: fixed;         /* fixed on screen instead of inside flex row */
+    bottom: 80px;            /* higher than the 20px bottom bar */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10010;          /* ensure above other buttons */
+}
+
+.google-login-btn img {
+    width: 16px;
+    height: 16px;
+}
+
+/* Hover effect */
+.google-login-btn:hover {
+    transform: translateX(-50%) translateY(-2px);
+    box-shadow:
+        0 0 12px #FFD700,
+        0 0 20px #ff66b2,
+        0 4px 15px rgba(0,0,0,0.4);
+}
+
+/* Active effect */
+.google-login-btn:active {
+    transform: translateX(-50%) scale(0.95);
+    box-shadow: 0 0 8px #FFD700, 0 0 15px #ff66b2, 0 4px 10px rgba(0,0,0,0.3);
+}

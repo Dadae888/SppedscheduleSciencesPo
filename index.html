@@ -27,13 +27,13 @@
             left: 0;
         }
     </style>
+</head>
 <div class="google-calendar-disclosure">
     <strong>Intégration Google Calendar</strong><br>
     SpeedSchedule utilise Google Calendar afin d’ajouter automatiquement des événements
     au calendrier des étudiants et d’évaluer leurs disponibilités.
     Aucune donnée n’est partagée avec des tiers.
 </div>
-</head>
 <body>
 <div id="flashLayer"></div>
 <div class="money-container" id="moneyContainer"></div>
@@ -109,10 +109,12 @@ function openpage3() {
 	onclick="openPopup2()">
     Donner des crédits $
   </button>
+  
  
 
 
 <h1 class="bienvenue">Speedschedule</h1>
+</div>
 
 <div class="overlay" id="overlay"></div>
 <div id="greetingText" style="margin-top: 20px; font-size: 24px;"></div>
@@ -135,17 +137,21 @@ function openpage3() {
 </div>
 
 <div class="bottom-center-container">
+ <button class="google-login-btn" id="login">
+    <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google logo">
+    Sign in with Google
+  </button>
   <button class="button-gold bottom-btn" onclick="openpage3()">Page des communications</button>
   <button class="button-gold" onclick="openpage4()">Dates clés à connaître</button>
+  
 </div>
 
 <script src="script.js"></script>
 
-<button id="login-google">Login 
-</button>
+
 
 <script>
-  document.getElementById('login-google').addEventListener('click', () => {
+  document.getElementById('login').addEventListener('click', () => {
     // This will redirect the browser to your Google login route
     window.location.href = '/auth/google';
   });
@@ -160,13 +166,13 @@ footer {
   bottom: 10px;         /* 10px du bas */
   right: 10px;          /* 10px de la droite */
   font-size: 0.7em;     /* texte très petit */
-  color: #555;          /* couleur grise */
+  color: #0000FF;          /* couleur grise */
   background: transparent; /* pas de fond */
   z-index: 1000;        /* toujours au-dessus du contenu */
 }
 
 footer a {
-  color: #555;           /* même couleur pour les liens */
+  color: #0000FF;           /* même couleur pour les liens */
   text-decoration: none; /* supprime le soulignement */
   margin: 0 3px;         /* petit espace entre les liens */
 }
@@ -179,5 +185,3 @@ footer a:hover {
 
 </body>
 </html>
-
-
