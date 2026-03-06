@@ -57,7 +57,7 @@ function renderTimetable(page2events) {
             .forEach(event => { // That means that every parameter in loop is assigned to event//
                 const button = document.createElement('button');
                 button.className = 'event';
-                button.textContent = `${event.time} - ${event.title} @ ${event.place} @ ${event.Eventassoname}`; // This is just a selection of what appears on button, object not modified//
+                button.textContent = `${event.time} - ${event.title} @ ${event.place} @ ${event.eventassoname}`; // This is just a selection of what appears on button, object not modified//
 				button.addEventListener('click', () => {
 					openAttendersList(event); // We transfer event so we have all inputs// // STARTING POINT OF EVENT OBJECT// 
 					});
@@ -300,4 +300,5 @@ function spawnMoneyAndFlash() {
             money.remove();
         });
     }
+
 }
