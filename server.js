@@ -1,14 +1,26 @@
-//creating untangible variables 
-// importing libraries 
+// Database server code// 
 
-/* Google calendar id client id first then secret id
-604858021810-16tmdq2p05h5nsg16v5p2s40dft7go22.apps.googleusercontent.com
-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 */ 
+// starting server// 
 
 
-// Post means : sending data to modify it//
-// Get means : retrieve data from the server//
-// Remember : if you wanna keep the data, you gotta create a json file with filesync, no other way// 
+
+// Establishing connection// 
+const { Pool } = require("pg");
+require('dotenv').config();
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
+
+pool.connect()
+  .then(() => console.log("Connected to database"))
+  .catch(err => console.error("DB connection error", err));
+  
+  
+ // All needed consts packages// 
 const express = require('express');
 const bodyParser = require('body-parser'); 
 const session = require('express-session');
@@ -21,101 +33,59 @@ require('dotenv').config();
 
 const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
+console.log(CLIENT_ID); 
+
+const { createClient } = require('@supabase/supabase-js');
+
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+);
 
 
 
 // Loading file system module 
-const fs = require('fs') ;
+
+
+
+
 const COUNTER_FILE = 'counter.txt';
 
 const app = express (); 
 const PORT = 8000 
 
-//Coding timetable// 
-const filePath3 = './page2events.json';
+app.use(express.urlencoded({ extended: true })); // parse application/x-www-form-urlencoded
+app.use(express.json()); // parse application/json si nécessaire
+  
 
-// Loading files when starting server// 
-let page2events = [];
-
-if (fs.existsSync(filePath3)) {
-    page2events = JSON.parse(fs.readFileSync(filePath3, 'utf8'));
-}
-
-// Coding association promo space// 
-const assocom = 'assocom.json';
-if (!fs.existsSync(assocom)) {
-    fs.writeFileSync(assocom, JSON.stringify([])); // empty array
-}
-
-// Needing images transfer//
+// Now file image module// 
 const multer = require('multer');
 
-
-// Making privacy file public// 
-
-app.get('/privacy-policy', (req, res) => {
-  res.sendFile(__dirname + '/public/privacy-policy.html');
-});
-
-app.get('/terms-of-service', (req, res) => {
-  res.sendFile(__dirname + '/public/terms-of-service.html');
-});
-// Starting real code for uploads //
-// Node path module// 
-const path = require('path');
-
-// Creating file // 
-const path2 = require('path');
-
-const uploadsDir = path2.join(__dirname, 'uploads');
-
-// Create folder if it doesn't exist
-if (!fs.existsSync(uploadsDir)) {
-    fs.mkdirSync(uploadsDir);
-}
-
 // Configure multer disk storage// 
-const storage = multer.diskStorage({
-	// FOLDER  Destination : it tells where to store the file. Parameters are req : HTTP request; file : info about the file ; cb : call back when we've decided where to store it//
-	destination: (req, file, cb) => {
-		cb(null, 'uploads/'); // Null because no errors accepted, uploads is name of the folder//
-	},
-	// Then saying what to name the file, keeping exact date and extension, FILE : //
-	filename: (req, file, cb) => {
-		const uniqueName = Date.now() + path.extname(file.originalname);
-		cb(null, uniqueName);
-  }
-});
+
+
+const storage = multer.memoryStorage();
 
 const upload = multer({ storage });
 // So now WHEN WE USE UPLOAD IT BECOMES USE MULTER AND GIVE DESTINATION AND NAME// 
+  
+  
+  
+  
+  
+  
+  
 
-// Recent events// 
-// Tableau global pour stocker les derniers événements
-let recentEvents = [];
-const MAX_EVENTS = 5; // on garde les 20 derniers
-let nameentered; 
-// Same thing as counter file for ranking// 
-const RANKING_FILE = 'ranking.json';
-
-// Creating votes file// 
-const VOTES_FILE = 'votes.json';
-
-if (!fs.existsSync(VOTES_FILE)) {
-    fs.writeFileSync(VOTES_FILE, JSON.stringify({}));
-}
-
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-// Créer le fichier s'il n'existe pas
-if (!fs.existsSync(RANKING_FILE)) {
-    fs.writeFileSync(RANKING_FILE, JSON.stringify([]));
-}
-
-
-
-
-// CALENDAR//
+  
+  
+  
+  
+  
+  
+  
+  
+ // Calendar// 
+ 
 
 
 
@@ -229,6 +199,7 @@ app.get('/auth/google',
 [Your route handler executes, e.g., res.redirect('/')] 
 */ 
 
+// This runs after login// For the moment user is redirected to home page// 
 app.get('/auth/google/callback', 
 	passport.authenticate('google', { failureRedirect: '/' }),
 	(req, res) => {
@@ -240,17 +211,15 @@ app.get('/auth/google/callback',
 // Creating redirection route// 
 app.get('/calendar', (req,res) => {
 	if (!req.user) return res.redirect('/'); // That's my homepage// Return ensures rest of the route is not executed// 
-	res.redirect('https://speedschedulesciencespo.fr/page2.html');
+	console.log("calendar called"); 
 }); 
 
 
 
 // Then, add event to google calendar route !!!!!// 
 app.post('/add-to-calendar', async (req, res) => {
-
-  if (!req.user) {
-    return res.redirect('/auth/google');
-  }
+	if (!req.user) return res.redirect('/');
+  
 	// Setting token for this session// 
   const oauth2Client = new google.auth.OAuth2();
   oauth2Client.setCredentials({
@@ -261,9 +230,8 @@ app.post('/add-to-calendar', async (req, res) => {
 	// So now frontend needs to correspond ! // 
   const event = {
     summary: req.body.summary,
-    description: req.body.description,
-    start: { dateTime: req.body.start, timeZone: 'Europe/Paris' },
-    end: { dateTime: req.body.end, timeZone: 'Europe/Paris' }
+    start: { dateTime: req.body.startdate, timeZone: 'Europe/Paris' },
+    end: { dateTime: req.body.enddate, timeZone: 'Europe/Paris' }
   };
 
   try {
@@ -280,6 +248,11 @@ app.post('/add-to-calendar', async (req, res) => {
 });
 	
 
+// Checking login : we are using req.user not req.tokens// 
+app.get('/auth/status', (req, res) => {
+    res.json({ loggedIn: !!req.user });
+});
+
 
 
 
@@ -287,416 +260,379 @@ app.post('/add-to-calendar', async (req, res) => {
 
 app.use(express.static(__dirname));
 
-// User id check 
-const USERID_FILES = 'userid.json';
 
-if (!fs.existsSync(USERID_FILES)) {
-    fs.writeFileSync(USERID_FILES, JSON.stringify([]));
-}
 
-// First request : when file is asked in opening popup or not ?// 
-app.get('/api/verifyID', (req, res) => {
-    const userfiles= JSON.parse(fs.readFileSync(USERID_FILES, 'utf8'));
-    // convertit JSON en tableau JS
-    res.json(userfiles); 
-		// renvoie le tableau au client, qui est vide la première fois
-});
+// Refonte des tables// 
+// Tout passe par express, peu importe pour le frontend qu'on transforme en SQL ou sur fichier après// 
+/* système 
 
-app.post('/api/verifyID', (req, res) => { 
-    const user_id = req.body.userId; 
-    if (!user_id) { 
-        return res.status(400).json({error : 'Missing fields'}); 
-    }
+Frontend
+   │
+   │ POST /api/verifyID
+   │ { userId: "user42" }
+   ▼
+Express route
+   ▼
+req.body.userId
+   ▼
+SQL query
+INSERT INTO users
+   ▼
+PostgreSQL database
+   ▼
+res.json({ success: true })
+   ▼
+Frontend reçoit la réponse
 
-    let data = [];
-    try {
-        data = JSON.parse(fs.readFileSync(USERID_FILES, 'utf8'));
-        if (!Array.isArray(data)) data = [];
-    } catch (err) {
-        data = []; // if file empty or invalid
-    }
+*/ 
 
-    // Avoid duplicates
-    if (!data.includes(user_id)) {
-        data.push(user_id);
-        fs.writeFileSync(USERID_FILES, JSON.stringify(data, null, 2));
-    }
 
-    console.log("Current users:", data);
-    res.json({ success: true });
-});
 
-// making sure 
+// 1. USER ID now is equal to google//  
 
-//Creating file 
-if (!fs.existsSync(COUNTER_FILE)) {
-    fs.writeFileSync(COUNTER_FILE, '0');
-}
+app.get('/api/verifyID', (req,res)=>{
+   if(!req.user) return res.json(false)
+   res.json(true)
+})
+// C'est la fonction de vérification d'existence d'un id, pas d'ajout de crédits// 
+app.post('/api/verifyID', async (req, res) => {
+  if (!req.user) return res.status(401).json({ error: 'Not logged in' });
 
-app.get('/ranking', (req, res) => {
-    const ranking = JSON.parse(fs.readFileSync(RANKING_FILE, 'utf8'));
-    const votes = JSON.parse(fs.readFileSync(VOTES_FILE, 'utf8'));              // convertit JSON en tableau JS
-    res.json({
-		ranking: ranking, 
-		votes: votes
-	});
-		// renvoie le tableau au client, qui est vide la première fois
-});
+  const googleId = req.user.profile.id; // ID Google unique
 
-// Creating POST endpoint for submit credits, answering to fetch ranking//
-app.post('/ranking', (req, res) => {
-	//Firstly getting the date//
-	const today = new Date().toISOString().split('T')[0];
-    const { name, creditsToAdd, userId } = req.body;
-	// Reading votes file and making it a variable//
-	let votes = JSON.parse(fs.readFileSync(VOTES_FILE, 'utf8'))
-	// If user is getting connected first time or date resets, reset credits// 
-	// votes is now an object that stores vote.userId.date.credits//
-	if (!votes[userId] || votes[userId].date !== today) {
-    votes[userId] = {
-        date: today,
-        creditsUsed: 0
-    };
-	}
-	if (votes[userId].creditsUsed + creditsToAdd > 15) { 
-		return res.status(400).json({
-        error: "Epepep petit malin. Eugène a repéré que tu as essayé d'ajouter plus de 3 crédits en une journée. Utilise un VPN (jrigole ça marchera pas non plus) ou attends jusqu'à demain " + "tu es repéré comme le user " + userId + "tu as voté à la date " + votes[userId].date + "/" + today
-    });
-	} else { 
-	// If valid, add to counter// 
-	votes[userId].creditsUsed += creditsToAdd; 
-	}
-	// Finally, because it is still stored in js, we must convert into json string, with null because we don't modifiy properties, to update file// 
-	fs.writeFileSync(VOTES_FILE, JSON.stringify(votes, null, 2)); 
-    if (!name || isNaN(creditsToAdd) || !userId) {
-        return res.status(400).json({ error: "Nom ou crédits invalides" });
-    }
-    const data = fs.readFileSync(RANKING_FILE, 'utf8');
-    let ranking = JSON.parse(data);
-    let existing = ranking.find(a => a.name.toLowerCase() === name.toLowerCase());
-    if (existing) {
-        existing.credits += creditsToAdd;
-    } else {
-        ranking.push({ name, credits: creditsToAdd });
-    }
-	console.log("BODY RECEIVED:", req.body);
-    ranking.sort((a, b) => b.credits - a.credits); //crédits décroissants//
-	// Ajouter un événement récent au tableau des évènements//
-	recentEvents.push({
-    message: `${nameentered} a donné ${creditsToAdd} crédits à ${name}`,
-    timestamp: new Date().toISOString()
-	});
-	console.log(recentEvents); 
-	// Limiter le nombre d'événements stockés
-	if (recentEvents.length > MAX_EVENTS) {
-    recentEvents.shift(); // supprime le plus ancien
-	}
-	fs.writeFileSync(RANKING_FILE, JSON.stringify(ranking, null, 2));//réécrit en json//
-    res.json({ 
-		ranking: ranking, 
-		votes: votes
-	});//renvoie au client//
+  await pool.query(
+    "INSERT INTO users(google_id, name) VALUES($1,$2) ON CONFLICT DO NOTHING", // Extrême imp : stocke le google id dans la base, si il y a déjà laisse le//
+    [googleId, req.user.profile.displayName]
+  );
+
+  res.json({ success: true });
 });
 
 
-// Asso com//
-// Architecture : we have one main json text file. In this JSON, we save content, etc, but we also save image in text. This file lives in my folder uploads which is on my server//
-// Then, the HTML will be able to upload the image through this json file//
-/*
- ├─ uploads image + form data → POST /api/promo
- │
-Server
- ├─ Multer saves image to /uploads/1700000000000.png
- ├─ Server writes JSON object to promo.json:
- │   { name, content, date, image: "1700000000000.png" }
- │
-Client Browser (on refresh)
- ├─ GET /api/promo → gets JSON
- ├─ Uses image filename to load actual file: /uploads/1700000000000.png */ 
- 
- // Warning : filename is assocom, no filepath given// 
 
-app.post('/api/promo', upload.single('image'), (req, res) => {
-	// Checking names are authorised//
-  const { name, content, date, sectionId } = req.body;
-  const allowed = JSON.parse(fs.readFileSync(ranking3));
-	if (!allowed.includes(name)) {
-    return res.status(403).json({ error: "Association not allowed" });
-	}
-  const image = req.file; // image info
-  if (!name || !content || !image || !date) {
-    return res.status(400).json({ error: "Missing fields" });
+//2 Ranking // 
+app.get('/ranking', async (req, res) => {
+
+  const rankingResult = await pool.query(
+    "SELECT * FROM ranking ORDER BY credits DESC"
+  );
+
+  const votesResult = await pool.query(
+    "SELECT * FROM votes"
+  );
+
+  res.json({
+    ranking: rankingResult.rows,
+    votes: votesResult.rows
+  });
+
+});
+
+
+	// Ranking push// 
+	// Understanding query : ONCONFLICT signifie si il y a déjà une ligne avec userid, qui elle correspond à une clé unique normalement, rajoute le à cette ligne//
+	// Les dollars servent à protéger des injections SQL. On pourrait juste dire associe à cellule 1 valeur req 1 mais pour éviter du code SQL on met $ pour protéger//
+app.post('/ranking', async (req, res) => {
+	let googleId; 
+  if (!req.user) { 
+	googleId= 0000 ; 
+	/*return res.status(401).json({ error: 'Not logged in' });*/ 
+  } else { 
+		const googleId = req.user.profile.id; 
   }
-  // Reading existing promos//
-  let promoData = [];
-  if (fs.existsSync(assocom)) {
-    const fileContent = fs.readFileSync(assocom);
-    promoData = JSON.parse(fileContent);
-  }
-    // Create new promo object
-  const newPromo = {
-    id: Date.now(),
-    name,
-    content,
-    image: image.filename, // just store filename
-    date,
-	sectionId : sectionId
-  };
-
-  // Add to JSON array or replace if existing//
-  const existingIndex = promoData.findIndex(p => p.sectionId === sectionId);
-
-  if (existingIndex !== -1) {
-    promoData[existingIndex] = newPromo;
-  } else {
-    promoData.push(newPromo);
-  }
-
-
-  // Save back to JSON file
-  fs.writeFileSync(assocom, JSON.stringify(promoData, null, 2));
-
-  console.log("Promo saved:", newPromo);
   
+  const name = req.body.name;           // nom de l'asso à créditer
+  const creditsToAdd = parseInt(req.body.creditsToAdd);
 
-  res.json({ success: true });
+  if (!name || isNaN(creditsToAdd)) return res.status(400).json({ error: 'Nom ou crédits invalides' });
+
+  const today = new Date().toISOString().split('T')[0];
+
+  // --- Reset journalier --- Chaque jour, on injecte des nouvelles dates dans la ligne//
+  await pool.query(
+    `INSERT INTO votes(google_id,date,creditsused)
+	VALUES($1,$2,0)
+	ON CONFLICT (google_id)
+	DO UPDATE SET
+	date = EXCLUDED.date,
+	creditsused =
+    CASE
+        WHEN votes.date <> EXCLUDED.date THEN 0
+        ELSE votes.creditsused
+    END `, 
+    [googleId, today] // Ces valeurs sont transmises à la base//
+  );
+
+  // --- Vérification du plafond ---
+  const voteCheck = await pool.query(
+    "SELECT creditsused FROM votes WHERE google_id=$1",
+    [googleId] // Définit votecheck comme le google id correspondant//
+  );
+
+  if (voteCheck.rows[0].creditsused + creditsToAdd > 50) {
+    return res.status(400).json({ error: "Limite dépassée" });
+  } // Ici la row [0] car c'est la valeur de créditsused//
+
+  // --- Ajout des crédits ---
+  await pool.query(
+    "UPDATE votes SET creditsused = creditsused + $1 WHERE google_id=$2",
+    [creditsToAdd, googleId]
+  );
+
+  // --- Mise à jour du ranking ---
+  await pool.query(
+    `INSERT INTO ranking(name,credits)
+     VALUES($1,$2)
+     ON CONFLICT (name)
+     DO UPDATE SET credits = ranking.credits + $2`,
+    [name, creditsToAdd]
+  );
+
+  // --- Retourne le ranking mis à jour ---
+  const rankingResult = await pool.query("SELECT * FROM ranking ORDER BY credits DESC");
+  res.json({ ranking: rankingResult.rows });
 });
 
 
-// Get function to load//
-app.get('/api/promo', (req, res) => {
-	if (!fs.existsSync(assocom)) {
-    return res.json([]);
-	}
-	// Previous line saying : if it doesn't exist return nothing//
-	const fileContent = fs.readFileSync(assocom);
-	const promoData = JSON.parse(fileContent);
-	res.json(promoData);
+
+
+// ------GESTION DES PROMOS------// 
+// Elles sont identifiées par id primary key// 
+app.get('/api/promo', async (req, res) => {
+  try {
+    const result = await pool.query("SELECT * FROM promo ORDER BY id ASC");
+    res.json(result.rows); // renvoie toutes les promos
+  } catch (err) {
+    console.error("Error fetching promo:", err);
+    res.status(500).json({ error: "Database error" });
+  }
 });
 
-// We need to allow browser to display images//
-// Sttaic files are images and files// 
-// It allows client to access my file stored on server, which normally isn't possible//
-// app use means use middleware globally in app//
-app.use('/uploads', express.static('uploads'));
+app.post('/api/promo', upload.single('image'), async (req, res) => {
+  try {
+    // 1️⃣ Vérification connexion
+    if (!req.user) return res.status(401).json({ error: "User not logged in" });
 
+    const googleId = req.user.profile.id; // conservé au cas où
 
-// Still ranking, but this time managing eventcredits// 
-
-
-
-
-
-
-// Endpoint to create get module, which sends a request and makes of it an answer *
-// let is the other way (other than const) to create a variable 
-//The following means that when someone visits this function is executed
-// Now that we have requested a thing named "visit", we must go and fetch it on the browser
-
-app.get('/visit', (req, res) => {
-
-  // Read current count from file, parse makes it readable into numbers and utf 8 converts it
-    let count = parseInt(fs.readFileSync(COUNTER_FILE, 'utf8'));
-
-    // Increase count by 1
-    count++;
-
-    // Save new count back to file
-    fs.writeFileSync(COUNTER_FILE, count.toString());
-
-    // Send updated count back to browser
-    res.json({ visitors: count });
-});
-
-
-// Endpoint to just get current visitor count (without increasing)
-app.get('/count', (req, res) => {
-
-    let count = parseInt(fs.readFileSync(COUNTER_FILE, 'utf8'));
-
-    res.json({ visitors: count });
-});
-
-//This parses POST data 
-//It acts like a translator from url encoded to text, extended meaning we can cet complex text
-
-//Endpoint si jamais il y a demande des past events// 
-app.get('/recent-events', (req, res) => {
-    res.json(recentEvents);
-});
-
-
-// Endpoint for three top rankings// 
-const ranking3 = 'ranking3.json';
-if (!fs.existsSync(ranking3)) {
-    fs.writeFileSync(ranking3, JSON.stringify([])); // empty array
-}
-
-app.get('/api/fetchthreefirst', (req, res) => {
-	const fileContent = fs.readFileSync(ranking3);
-    const topThreeData = JSON.parse(fileContent);
-    res.json(topThreeData); 
-}); 
-// Getting events// 
-
-app.post('/api/fetchthreefirst', (req, res) => { 
-	const Topthree = req.body.Topthree; 
-	if (!Topthree) { 
-		return res.status(400).json({error : 'Missing fields'}); 
-	}
-	fs.writeFileSync(ranking3, JSON.stringify(Topthree, null, 2));
-	console.log(Topthree);
-	res.json({ success: true }); //allows fetch to stop hanging//
-}); 
+    // 2️⃣ Récupération des données
+    const { name, content, date, sectionId } = req.body;
 	
+	// Gestion image 
+	const file = req.file;
+	if (!file) return res.status(400).json({ error: "No file uploaded" });
+	// Create unique name 
+	const fileName = Date.now() + "-" + file.originalname;
+	// Sending to bucket// 
+	const { data, error } = await supabase.storage
+		.from('promo-images')
+		.upload(fileName, file.buffer, {
+		contentType: file.mimetype
+	})	;
 
-app.get('/api/page2events', (req, res) => {
-	res.json(page2events); 
-}); 
-
-// Creating events on demand// 
-
-app.post('/api/page2events', (req, res) => {
-	const {title, date, time, place, Eventassoname, eventid, attenders} = req.body; 
-	if (!title || !date || !time || !place ||!Eventassoname) {
-        return res.status(400).json({ error: 'Missing fields' });
-    }
-
-    page2events.push({ title, date, time, place, Eventassoname, eventid, attenders });
-	// Modifying file// 
-	fs.writeFileSync(
-        filePath3,
-        JSON.stringify(page2events, null, 2)
-    );
-	// Adding credits// 
-	// Setting new variable to name we have in rankings//
-	// I can't use eventassoname because it's already defined as part of my object//
-	// Needing to redefine ranking// 
-	const data = fs.readFileSync(RANKING_FILE, 'utf8');
-    let ranking = JSON.parse(data);
-	const association = ranking.find(a => a.name.toLowerCase() === Eventassoname.toLowerCase());
-	if(association) {
-		association.credits+=3;
-	} else {
-        ranking.push({ name: Eventassoname, credits: 3 });
-    }		
-	// Saving ranking file // 
-	fs.writeFileSync(
-    RANKING_FILE,
-    JSON.stringify(ranking, null, 2)
-	);
-    res.json({ success: true });
-	console.log(page2events, ranking); 
-});
-
-
-// Attenderslist// 
-
-
-app.get('/api/attenderslist', (req, res) => {
-	if (!fs.existsSync(filePath3)) {
-		return res.json([]);
-	}
-  const { eventid } = req.query; //Query is the parameter eventif that comes after? in fetch// 
-
-  if (!eventid) {
-    return res.status(400).json({ error: "Missing eventid" });
-  }
-
-  const fileContent = fs.readFileSync(filePath3);
-  const events = JSON.parse(fileContent);
-
-  const event = events.find(e => e.eventid == eventid);
-
-  if (!event) {
-    return res.status(404).json({ error: "Event not found" });
-  }
-
-  res.json(event.attenders || []);
-});
-
-
-
-
-app.post('/api/attenderslist', (req, res) => {
-
-  const { eventid, name } = req.body;
-
-  if (!eventid || !name) {
-    return res.status(400).json({ error: "Missing fields" });
-  }
-
-  const fileContent = fs.readFileSync(filePath3);
-  const events = JSON.parse(fileContent);
-
-  const eventIndex = events.findIndex(e => e.eventid == eventid);
-
-  if (eventIndex === -1) {
-    return res.status(404).json({ error: "Event not found" });
-  }
-
-  // Initialize attenders if not existing
-  if (!events[eventIndex].attenders) {
-    events[eventIndex].attenders = [];
-  }
-  if (!events[eventIndex].attenders.includes(name)) {
-    events[eventIndex].attenders.push(name); // That adds name// 
+	if (error) {
+		console.error("Error uploading image:", error);
+		return res.status(500).json({ error: "Image upload failed" });
 	}
 
- 
+	// URL publique (puisque le bucket est public)
+	const imageUrl = `${process.env.SUPABASE_URL}/storage/v1/object/public/promo-images/${fileName}`;
+   
 
-  fs.writeFileSync(filePath3, JSON.stringify(events, null, 2));
-
-  res.json({ success: true });
-});
-
-
-// Adding key events listener post and get//
-// Creating key events file// 
-
-
-const filePath5 = './keyevents.json';
-
-// Loading files when starting server// 
-let keyevents = [];
-if (!fs.existsSync(filePath5)) {
-    fs.writeFileSync(filePath5, JSON.stringify([])); // empty array
-}
-if (fs.existsSync(filePath5)) {
-    keyevents = JSON.parse(fs.readFileSync(filePath5, 'utf8'));
-}
-
-app.post('/api/keyevents', (req, res) => {
-	const {title, date, time, place, Eventassoname, eventid, } = req.body; 
-	if (!title || !date || !time || !place ||!Eventassoname) {
-        return res.status(400).json({ error: 'Missing fields' });
+    if (!name || !content || !file || !date || !sectionId) {
+      return res.status(400).json({ error: "Missing fields" });
     }
 
-    keyevents.push({ title, date, time, place, Eventassoname, eventid, });
-	// Modifying file// 
-	fs.writeFileSync(
-        filePath5,
-        JSON.stringify(keyevents, null, 2)
+    // 3️⃣ Vérification que le nom fait partie des 3 premières associations : LIMIT 3 créé 3 lignes comme slice// 
+    const top3Result = await pool.query(
+      "SELECT name FROM ranking ORDER BY credits DESC LIMIT 3"
     );
-    res.json({ success: true });
-	console.log(keyevents); 
+    const top3Names = top3Result.rows.map(r => r.name); // Récupère les trois premiers noms : r veut dire "cette ligne//
+
+    if (!top3Names.includes(name)) {
+      return res.status(403).json({ error: "Only top 3 associations are allowed to add promos" });
+    }
+
+    // 4️⃣ Création de l'objet promo
+    const newPromo = {
+      id: Date.now(),
+      name,
+      content,
+      image: imageUrl,
+      date,
+      sectionId
+    };
+
+    // 5️⃣ Insérer ou remplacer si sectionId existe// Excluded permet de redécaler en cas d'existence d'ID//
+    // 5️⃣ Insérer ou remplacer si sectionId existe// Excluded permet de redécaler en cas d'existence d'ID//
+    await pool.query(
+      `INSERT INTO promo(id, name, content, image, date, sectionid)
+       VALUES($1,$2,$3,$4,$5,$6)
+       ON CONFLICT (sectionid)
+       DO UPDATE SET
+         name = EXCLUDED.name,
+         content = EXCLUDED.content, 
+         image = EXCLUDED.image,
+         date = EXCLUDED.date`,
+      [newPromo.id, newPromo.name, newPromo.content, newPromo.image, newPromo.date, newPromo.sectionId]
+    );
+
+    console.log("Promo saved:", newPromo);
+    res.json({ success: true, promo: newPromo });
+
+  } catch (err) {
+    console.error("Error saving promo:", err);
+    res.status(500).json({ error: "Database error" });
+  }
 });
 
-// Showing keyevents for loading// 
-app.get('/api/keyevents', (req, res) => {
-	res.json(keyevents); 
-}); 
 
-// Start the server
-app.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}`);
+
+// --------GESTION DE PAGE2EVENTS. VIGILANCE + EVENTID----------// 
+// get : pas de modification, les rows sont renvoyées// 
+app.get('/api/page2events', async (req, res) => {
+  try {
+    const result = await pool.query(
+      "SELECT * FROM page2events ORDER BY date, time"
+    );
+    res.json(result.rows); // renvoie exactement un tableau d'objets comme avant
+  } catch (err) {
+    console.error("Error fetching events:", err);
+    res.status(500).json({ error: "Database error" });
+  }
 });
 
-//no other event listener is needed because submit name is 
-// launched by my HTML on click button 
 
-//linking to html file because express does not normally serve html 
-//dirname is a vs code variable that means serve html file which is in the same folder as server.js
+
+
+// Gestion des attenders : pas de modification frontend// 
+app.get('/api/attenderslist', async (req, res) => {
+  try {
+    const { eventid } = req.query;
+    if (!eventid) return res.status(400).json({ error: "Missing eventid" });
+
+    const result = await pool.query(
+      "SELECT attenders FROM page2events WHERE eventid = $1",
+      [eventid]
+    );
+
+    if (result.rowCount === 0) return res.status(404).json({ error: "Event not found" });
+
+    res.json(result.rows[0].attenders || []);
+  } catch (err) {
+    console.error("Error fetching attenders:", err);
+    res.status(500).json({ error: "Database error" });
+  }
+});
+
+// Gestion du POST ; erreur 401 : pas de login// On la met en comment pour l'instant// 
+app.post('/api/page2events', async (req, res) => {
+  try {
+    // 0️⃣ Vérification login Google
+	/*if (!req.user) return res.status(401).json({ error: "User not logged in" });
+    const googleId = req.user.profile.id; // on conserve le Google ID pour usage futur ou audit */
+
+    // 1️⃣ Récupération des données envoyées par le frontend
+    const { title, date, time, endtime, place, Eventassoname, eventid, attenders } = req.body;
+
+    if (!title || !date || !time || !place || !Eventassoname || !eventid) {
+      return res.status(400).json({ error: 'Missing fields' });
+    }
+
+    // 2️⃣ Ajouter ou remplacer l'événement dans la base SQL
+    await pool.query(
+      `INSERT INTO page2events(eventid, title, date, time, endtime, place, eventassoname, attenders)
+       VALUES($1,$2,$3,$4,$5,$6,$7,$8)
+       ON CONFLICT (eventid) DO UPDATE
+       SET title = EXCLUDED.title,
+           date = EXCLUDED.date,
+           time = EXCLUDED.time,
+           endtime = EXCLUDED.endtime,
+           place = EXCLUDED.place,
+           eventassoname = EXCLUDED.eventassoname,
+           attenders = EXCLUDED.attenders`,
+      [eventid, title, date, time, endtime, place, Eventassoname, attenders || []]
+    );
+
+    // 3️⃣ Mettre à jour le ranking (+3 crédits pour l’association)
+    const rankingResult = await pool.query(
+      "SELECT * FROM ranking WHERE LOWER(name) = LOWER($1)",
+      [Eventassoname]
+    );
+
+    if (rankingResult.rowCount > 0) {
+      // Si existant, ajouter 3 crédits
+      await pool.query(
+        "UPDATE ranking SET credits = credits + 3 WHERE LOWER(name) = LOWER($1)",
+        [Eventassoname]
+      );
+    } else {
+      // Sinon, créer nouvelle entrée
+      await pool.query(
+        "INSERT INTO ranking(name, credits) VALUES($1, $2,)",
+        [Date.now(), Eventassoname, 3]
+      );
+    }
+
+    // 4️⃣ Réponse au frontend
+    res.json({ success: true, googleId, eventid });
+
+  } catch (err) {
+    console.error("Error saving event:", err);
+    res.status(500).json({ error: "Database error" });
+  }
+});
+
+
+
+// -------GESTION DES KEYEVENTS--------// 
+
+app.post('/api/keyevents', async (req, res) => {
+  try {
+    // 0️⃣ Vérification login Google
+    /*if (!req.user) return res.status(401).json({ error: "User not logged in" });
+    const googleId = req.user.profile.id; // utile pour audit/log si nécessaire*/
+
+    // 1️⃣ Récupération des données du frontend
+    const { title, date, time, place, Eventassoname, eventid } = req.body;
+
+    if (!title || !date || !time || !place || !Eventassoname || !eventid) {
+      return res.status(400).json({ error: 'Missing fields' });
+    }
+
+    // 2️⃣ Insertion ou update dans PostgreSQL
+    await pool.query(
+      `INSERT INTO keyevents(eventid, title, date, time, place, eventassoname)
+       VALUES($1,$2,$3,$4,$5,$6)
+       ON CONFLICT (eventid) DO UPDATE
+       SET title = EXCLUDED.title,
+           date = EXCLUDED.date,
+           time = EXCLUDED.time,
+           place = EXCLUDED.place,
+           eventassoname = EXCLUDED.eventassoname`,
+      [eventid, title, date, time, place, Eventassoname]
+    );
+
+    // 3️⃣ Réponse au frontend (inchangée)
+    res.json({ success: true, googleId, eventid });
+
+  } catch (err) {
+    console.error("Error saving keyevent:", err);
+    res.status(500).json({ error: "Database error" });
+  }
+});
+
+app.get('/api/keyevents', async (req, res) => {
+  try {
+    const result = await pool.query(
+      "SELECT * FROM keyevents ORDER BY date, time"
+    );
+    res.json(result.rows); // renvoie exactement le même tableau qu’avant
+  } catch (err) {
+    console.error("Error fetching keyevents:", err);
+    res.status(500).json({ error: "Database error" });
+  }
+});
 
 
 // Notifications // 
@@ -723,52 +659,53 @@ webpush.setVapidDetails(
   privateVapidKey
 );
 
-// SToring subscriptions// 
-const subscriptionsFile = path.join(__dirname, "subscriptions.json");
-if (!fs.existsSync(subscriptionsFile)) {
-    fs.writeFileSync(subscriptionsFile, JSON.stringify([])); // empty array
-}
+app.post("/subscribe", async (req, res) => {
 
-app.post("/subscribe", (req, res) => {
-	// Reading existing file// 
-	let subscriptions = JSON.parse(fs.readFileSync(subscriptionsFile, "utf8"));
 	const newSub = req.body;
-	const exists = subscriptions.find(sub => sub.endpoint === newSub.endpoint); // Beware I have to check that endpoint is stored in subscription//
-	if (!exists) {
-		subscriptions.push(newSub);
-		fs.writeFileSync(subscriptionsFile, JSON.stringify(subscriptions, null, 2));
+
+	if (!newSub || !newSub.endpoint) {
+		return res.status(400).json({ error: "Invalid subscription" });
 	}
+
+	await pool.query(
+		`INSERT INTO subscriptions(endpoint, subscription)
+		 VALUES($1,$2)
+		 ON CONFLICT (endpoint) DO NOTHING`,
+		[newSub.endpoint, newSub]
+	);
+
 	res.status(201).json({});
 });
 
-//Now sending notifications, when fetch send is sent from client// 
-// Daily notifications//
+// Quotidien version SQL// 
 const cron = require("node-cron");
-// Reminder that no send needs to be configured //
-// Await is used to pause until function is done so that we receive the log when it's actually done// 
 
 cron.schedule("29 15 * * *", async () => {
-	let subscriptions = JSON.parse(fs.readFileSync(subscriptionsFile, "utf8"));
+
+	const result = await pool.query("SELECT subscription FROM subscriptions");
+	const subscriptions = result.rows.map(row => row.subscription);
+
 	const payload = JSON.stringify({
-    title: "Daily Reminder",
-    body: "Vous avez 3 crédits à utilier pour soutenir les assos"
+		title: "Daily Reminder",
+		body: "Vous avez 3 crédits à utiliser pour soutenir les assos"
 	});
-	// Loops over file of subscritions, creates constant named sub, and sends to everyone// 
+
 	for (const sub of subscriptions) {
+
 		try {
-		await webpush.sendNotification(sub, payload);
-		console.log("Notification sent to:", sub.endpoint);
+			await webpush.sendNotification(sub, payload);
+			console.log("Notification sent to:", sub.endpoint);
+
 		} catch (err) {
-		console.error("Failed to send notification to:", sub.endpoint, err);
+			console.error("Failed to send notification:", err);
 		}
 	}
 });
 
-// Other notifications from fetch// 
-// Notice how payload is always defined on server// 
-  
 app.post("/send", async (req, res) => {
-	let subscriptions = JSON.parse(fs.readFileSync(subscriptionsFile, "utf8"));
+
+	const result = await pool.query("SELECT subscription FROM subscriptions");
+	const subscriptions = result.rows.map(row => row.subscription);
 
 	const payload = JSON.stringify({
 		title: "Speedschedule",
@@ -776,17 +713,95 @@ app.post("/send", async (req, res) => {
 	});
 
 	for (const sub of subscriptions) {
+
 		try {
 			await webpush.sendNotification(sub, payload);
 			console.log("Notification sent to:", sub.endpoint);
+
 		} catch (err) {
-			console.error("Failed to send notification to:", sub.endpoint, err);
+			console.error("Failed to send notification:", err);
 		}
 	}
 
-	res.sendStatus(200); // optional but recommended
+	res.sendStatus(200);
+});
+
+// Finally : COUNTER//
+app.get('/visit', async (req, res) => {
+
+  const result = await pool.query(
+    `UPDATE counter
+     SET visitors = visitors + 1
+     WHERE id = 1
+     RETURNING visitors`
+  );
+
+  res.json({ visitors: result.rows[0].visitors });
+
 });
 
 
 
+app.get('/api/fetchthreefirst', async (req, res) => {
 
+  const result = await pool.query(
+    "SELECT * FROM ranking3 ORDER BY position ASC"
+  );
+
+  res.json(result.rows);
+
+});
+
+
+
+app.post('/api/fetchthreefirst', async (req, res) => {
+
+	const Topthree = req.body.Topthree;
+
+	if (!Topthree) {
+		return res.status(400).json({ error: 'Missing fields' });
+	}
+
+	await pool.query("DELETE FROM ranking3");
+
+	for (const entry of Topthree) {
+
+		await pool.query(
+			`INSERT INTO ranking3(position,name,credits)
+			 VALUES($1,$2,$3)`,
+			[entry.position, entry.name, entry.credits]
+		);
+
+	}
+
+	console.log(Topthree);
+
+	res.json({ success: true });
+
+});
+
+
+// Finally 2 : recent events// 
+let recentEvents = [];
+const MAX_EVENTS = 3
+
+
+app.get('/recent-events', (req, res) => {
+    res.json(recentEvents);
+});
+
+// Start the server
+app.listen(PORT, () => {
+    console.log(`Server running at http://localhost:${PORT}`);
+});
+
+// Making privacy file public// 
+
+app.get('/privacy-policy', (req, res) => {
+  res.sendFile(__dirname + '/public/privacy-policy.html');
+});
+
+app.get('/terms-of-service', (req, res) => {
+  res.sendFile(__dirname + '/public/terms-of-service.html');
+});
+// Starting real code for uploads //

@@ -80,11 +80,6 @@
 </div>
 
 
-<script>
-function openpage3() {
-    window.open("page3.html", "_blank");
-}
-</script>
 
 *
 
@@ -99,42 +94,25 @@ function openpage3() {
 	<button 
 		class="left-btn" 
 		style="background-color: red ; " 
-		onclick="openPopup()">
+		onclick="openevents()">
 		Consulter/Ajouter des évènements
 		</button>
 		<button 
 	class="right-btn" 
     id="addTextBtn"
-    style="background-color: blue;"
-	onclick="openPopup2()">
+	onclick="openCreditPopup()">
     Donner des crédits $
   </button>
-  
+ </div>
  
-
-
-<h1 class="bienvenue">Speedschedule</h1>
+ <div class="bienvenue-container">
+    <img src="logospeedschedule.png" alt="logo gauche" class="bienvenue-logo">
+    <h1 class="bienvenue">Speedschedule</h1>
+    <img src="logospeedschedule.png" alt="logo droite" class="bienvenue-logo">
 </div>
 
 <div class="overlay" id="overlay"></div>
 <div id="greetingText" style="margin-top: 20px; font-size: 24px;"></div>
-
-<div class="popup" id="popup2">
-    <h3>Vous allez participer au classement des associations. Les crédits correspondent à l'intérêt que vous portez aux évènements. Vous disposez d'un maximum de 3 crédits à dépenser par jour. Par mesure de sécurité, quel est votre nom ?</h3>
-    <input type="text" id="username2" placeholder="Your name">
-    <br><br>
-    <button id="submitBtn2">Submit</button>
-    <button onclick="closePopup2()">Cancel</button>
-</div>
-
-
-<div class="popup" id="popup">
-    <h3>Vous allez consulter l'agenda des évènements du campus de Poitiers. Par mesure de sécurité, quel est votre nom ?</h3>
-    <input type="text" id="username" placeholder="Your name">
-    <br><br>
-    <button id="submitBtn">Submit</button>
-    <button onclick="closePopup()">Cancel</button>
-</div>
 
 <div class="bottom-center-container">
  <button class="google-login-btn" id="login">
@@ -145,17 +123,8 @@ function openpage3() {
   <button class="button-gold" onclick="openpage4()">Dates clés à connaître</button>
   
 </div>
-
-<script src="script.js"></script>
-
-
-
-<script>
-  document.getElementById('login').addEventListener('click', () => {
-    // This will redirect the browser to your Google login route
-    window.location.href = '/auth/google';
-  });
-</script>
+ 
+ 
 <footer>
   <a href="/privacy-policy">Politique de confidentialité</a> |
   <a href="/terms-of-service">Conditions d'utilisation</a>
@@ -185,3 +154,8 @@ footer a:hover {
 
 </body>
 </html>
+
+  
+  
+  
+<script src="script.js"></script>

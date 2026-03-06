@@ -90,7 +90,8 @@ async function sendpromos(event, form, sectionId) {
 	// Defining variables// 
 	const name = selectedAsso; 
 	if (!name) { 
-		alert.json("you must select an association"); 
+		alert("you must select an association"); 
+		return; 
 	} 
 	const content = form.querySelector("textarea").value;
 	const date = form.querySelector("input[type='date']").value;
