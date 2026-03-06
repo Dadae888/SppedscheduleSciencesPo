@@ -48,17 +48,18 @@ function renderTimetable(page2events) {
 		// e représente chaque ligne du tableau page2events// 
 		//e.date c'est prendre la propriété date de e pour garder seulement les évènements du jour dans ce jour//
 		// On est dans une boucle donc ça ne garde les évènements du jour que pour le premier jour, pareil avec le deuxième jour// 
+		// There is no need to define event because we are reading page2events// 
         page2events
             .filter(e => e.date === dateStr)
 			// Ensuite cela met dans le bon ordre selon l'heure// 
             .sort((a,b) => a.time.localeCompare(b.time))
 			// Event est une fonction de for each ici, pas une variable globale, elle sert juste à prendre ligne par ligne//
-            .forEach(event => {
+            .forEach(event => { // That means that every parameter in loop is assigned to event//
                 const button = document.createElement('button');
                 button.className = 'event';
-                button.textContent = `${event.time} - ${event.title} @ ${event.place} @ ${event.Eventassoname}`;
+                button.textContent = `${event.time} - ${event.title} @ ${event.place} @ ${event.Eventassoname}`; // This is just a selection of what appears on button, object not modified//
 				button.addEventListener('click', () => {
-					openAttendersList(event); // We transfer event so we have all inputs//
+					openAttendersList(event); // We transfer event so we have all inputs// // STARTING POINT OF EVENT OBJECT// 
 					});
                 column.appendChild(button);
             });
@@ -112,11 +113,26 @@ async function openAttendersList(eventData) {
                 name: name
             })
         });
+		
+		// Checking if user is logged in// 
+		const authCheck = await fetch('/auth/status');
+		const authData = await authCheck.json();
+
+		if (!authData.loggedIn) {
+			// Storing event// 
+			localStorage.setItem("pendingEvent", JSON.stringify(eventData));
+			window.location.href = "/auth/google";
+			return;
+		} else { 
+			await addtocalendar(eventData); 
+		} 
+		
 
         popup.remove();
 		overlay.remove(); 
         openAttendersList(eventData); // reload list
     });
+	
 
     // Close button
     document.getElementById('closeBtn').addEventListener('click', () => {
@@ -125,6 +141,43 @@ async function openAttendersList(eventData) {
     });
 }
 
+// In case of pending event, load when page reloads// 
+window.addEventListener("load", async () => {
+
+    const pendingEvent = localStorage.getItem("pendingEvent");
+	console.log(pendingEvent); 
+
+    if (pendingEvent) {
+
+        const eventData = JSON.parse(pendingEvent);
+
+        await addtocalendar(eventData);
+
+        localStorage.removeItem("pendingEvent");
+    }
+
+});
+
+async function addtocalendar(eventData) { 
+	// Here is what is expected on backend : start: { dateTime: req.body.start, timeZone: 'Europe/Paris' }, end: { dateTime: req.body.end, timeZone: 'Europe/Paris' }// 
+	// What I need is to go to my post on frontend which sends title etc//
+	// So I need to identify event through event id, then see date// 
+	// Merging date and time first// 
+	const startdate = `${eventData.date}T${eventData.time}:00`; 
+	const enddate = `${eventData.date}T${eventData.endtime}:00`; 
+	await fetch('/add-to-calendar', {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		credentials: 'include', // THIS LINE IS KEY, IT ALLOWS TO SEND COOKIE//
+		body: JSON.stringify({
+			summary: eventData.title,
+			location: eventData.place,
+			startdate: startdate,
+			enddate: enddate
+		})
+	});
+}; 
+	
 	
 
 // Quand le form est envoyé, il faut éxécuter cette fonction//
@@ -137,6 +190,7 @@ form.addEventListener('submit', async (e) => {
     const title = document.getElementById('title').value;
     const date = document.getElementById('date').value;
     const time = document.getElementById('time').value;
+	const endtime = document.getElementById('endtime').value;
 	const place = document.getElementById('place').value;
 	const Eventassoname = document.getElementById('Eventassoname').value.trim(); 
 	const eventid = Date.now(); 
@@ -154,7 +208,7 @@ form.addEventListener('submit', async (e) => {
     await fetch('/api/page2events', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, date, time, place, Eventassoname, eventid, attenders })
+        body: JSON.stringify({ title, date, time, endtime, place, Eventassoname, eventid, attenders })
     });
 	triggerFlash(); 
 	sendeventnot(); 

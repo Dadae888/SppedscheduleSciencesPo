@@ -24,9 +24,9 @@ self.addEventListener('push', event => { // event is now the payload we received
 // 3️⃣ Display the notification
 event.waitUntil(
   self.registration.showNotification("✨ " + data.title + " ✨", {
-    body: "💖 " + data.body + "\n\n🔥 Inscrivez-vous vie !",
+    body: "💖 " + data.body + "\n\n🔥 Inscrivez-vous vite !",
     
-    icon: "/icone.png",          // small icon (required)
+    icon: "/logospeedschedule.png",          // small icon (required)
     badge: "/badge.png",         // monochrome small icon (Android status bar)
     image: "/banner1.png",        // BIG banner image (makes it premium)
     

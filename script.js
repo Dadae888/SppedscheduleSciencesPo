@@ -24,42 +24,63 @@ fetch('/visit')
         document.getElementById('visitorCount').textContent = data.visitors;
 		console.log("new visitor was added to the count")
     });
+	
 
-// Saving user ids with local storage // 
+// Conversion function// 
+function urlBase64ToUint8Array(base64String) {
+  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding)
+    .replace(/\-/g, '+')
+    .replace(/_/g, '/');
+  
+  const rawData = window.atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+  
+  for (let i = 0; i < rawData.length; ++i) {
+    outputArray[i] = rawData.charCodeAt(i);
+  }
+  return outputArray;
+}
 
+// Managing buttons// 
 
-// first : checking user id does not already exist in local storage // 
-function getUserId() {
-	let userId = localStorage.getItem("userId"); 
-	if (!userId) {
-		// Generating random ID// 
-		userId = crypto.randomUUID(); 
-		console.log(userId + "attributed"); 
-		// Then saving to browser //
-		localStorage.setItem("userId", userId); 
-		return userId; 
-		// La fonction retourne userId // 
+// Function : when on click from button class=left-btn and on click// 
+// What do we need ? We need triggernot if subscription doesn't exist.// 
+//We need to open page 2// 
+
+async function openevents() { 
+	console.log("open events is executed");
+	// Throwing function only if subscription doesn't exist// 
+	if (!('serviceWorker' in navigator)) {
+		console.error('Service Workers not supported');
+		return null;
 	}
-	return userId; 
+	    try {
+			// You need a service worker registered for this line to work//
+			const registration = await navigator.serviceWorker.ready;
+			const existingSub = await registration.pushManager.getSubscription();
+			console.log("existingsub" + existingSub); 
+			if (!existingSub) { 
+				try {
+					await triggernot(); 
+					return; 
+            } catch (err) {
+                console.error("triggernot failed:", err);
+            }
+        }
+    } catch (err) {
+        console.error("Service Worker or Push subscription failed:", err);
+    }
+
+    openpage2(); // guaranteed to run even if errors occurred
 }
-// Then use userid to custom triggernot// 
 
-async function uploadID() { 
-	const userId = getUserId() ; 
-	const responseID = await fetch('/api/verifyID', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId : userId })
-		// le body = tout ce qui est envoyé, dedans on demande l'éxécution de la fonction getUserId//
-    });
-	const result = await responseID.json(); 
-}
 
- 
-	
-	
 
-// notifications 
+
+
+
+// Defining triggernot// 
 async function triggernot() {
 	console.log("triggernot is being executed"); 
 	// Checking if service worker is used br navigator// 	
@@ -97,102 +118,13 @@ async function triggernot() {
 		body: JSON.stringify(subscription)
 	});
 	alert("subscribed to push notifications!"); 
-	openpage2 ();
 }; 
-	
-	
-	
-	
-	
-	
 
 
 
 
-
-
-// Conversion function// 
-function urlBase64ToUint8Array(base64String) {
-  const padding = '='.repeat((4 - base64String.length % 4) % 4);
-  const base64 = (base64String + padding)
-    .replace(/\-/g, '+')
-    .replace(/_/g, '/');
-  
-  const rawData = window.atob(base64);
-  const outputArray = new Uint8Array(rawData.length);
-  
-  for (let i = 0; i < rawData.length; ++i) {
-    outputArray[i] = rawData.charCodeAt(i);
-  }
-  return outputArray;
-}
-
-
-//The following code ensures the opening of the popup box when button is clicked
-
-async function openPopup() {
-	//That calls for the elemnt in HTML with the id popup 
-	const userId = getUserId(); 
-	const response = await fetch("/api/verifyID");
-	const data4 = await response.json(); // this parses JSON automatically
-	if (data4.includes(userId)) { 
-		openpage2(); 
-	} else {
-		uploadID() ; 
-		    document.getElementById("popup").style.display = "block";
-   			document.getElementById("overlay").style.display = "block";
-	} 
-}
-		
-		
-	
-    
-
-
-async function closePopup() {
-	console.log("close popup is been executed")
-    document.getElementById("popup").style.display = "none";
-    document.getElementById("overlay").style.display = "none";
-	// Throwing function only if subscription doesn't exist// 
-	if (!('serviceWorker' in navigator)) {
-		console.error('Service Workers not supported');
-		return null;
-	}
-	    try {
-			// You need a service worker registered for this line to work//
-			const registration = await navigator.serviceWorker.ready;
-			const existingSub = await registration.pushManager.getSubscription();
-			console.log("existingsub" + existingSub); 
-			if (!existingSub) { 
-				try {
-					await triggernot(); 
-					return; 
-            } catch (err) {
-                console.error("triggernot failed:", err);
-            }
-        }
-    } catch (err) {
-        console.error("Service Worker or Push subscription failed:", err);
-    }
-
-    openpage2(); // guaranteed to run even if errors occurred
-
-}
-
-
-function openPopup2() {
-	//That calls for the elemnt in HTML with the id popup 
-    document.getElementById("popup2").style.display = "block";
-    document.getElementById("overlay").style.display = "block";
-	// block actually means make it visible
-}
-
-function closePopup2() {
-	console.log("close popup2 is been executed")
-    document.getElementById("popup2").style.display = "none";
-    document.getElementById("overlay").style.display = "none";
-}
-
+// --------Managing credits button---------// 
+// Function called is opencreditpopup// 
 // Then, functions to open the second popup when adding credits 
 function openCreditPopup() {
     document.getElementById("creditPopup").style.display = "block";
@@ -202,96 +134,15 @@ function openCreditPopup() {
 function closeCreditPopup() {
     document.getElementById("creditPopup").style.display = "none";
 }
-
-
-
-
-
-document.getElementById("submitBtn").addEventListener("click", function(event) {
-    submitName();  // only runs on click
-});
-
-// Event listener second button//
-
-document.getElementById("submitBtn2").addEventListener("click", function(event) {
-    submitName2();  // only runs on click
-	openCreditPopup() ;
-});
-
+	
+// Fonction pour éxécuter add credits// 
 // Event listener add credits// 
+// Modifications : plus de vérification de userid, l'ajout de google id se fait sur le backend// 
+// Attention, pour le moment si req.user est vide googleId est mis à 0000, côté backend/ /
 document.getElementById('submitCreditsBtn').addEventListener('click', addCredits);
 
-	
-//following code puts the username entered in a variable named value
-//username is the id of the input in html 
-//Second step in the function is just checking the text isn't empty 
-
-
-
-
-
-
-// Afficher, vider, et renouveler le tableau//
-// A comprendre : ce script se lie a mon tableau HTML en modifiant mon tbody, mais pas les thead// 
-function displayRanking() {
-    let tbody = document.querySelector("#ranking-container tbody");
-    tbody.innerHTML = "";
-	//Ranking variable//
-	ranking.sort((a, b) => b.credits - a.credits);
-	// Boucle pour créér pour chaque association une ligne//
-	let dataToDisplay = showFullRanking ? ranking : ranking.slice(0, 6); //if show full ranking is false then show everything// This is a short version of if else//
-
-	dataToDisplay.forEach((asso, index) => {
-		let tr = document.createElement("tr");
-		let posText = index === 0 ? "🥇 1" :
-                      index === 1 ? "🥈 2" :
-                      index === 2 ? "🥉 3" : (index + 1);
-		//On ajoute à chaque ligne les cellules nécessaires// 
-		        tr.innerHTML = `
-            <td>${posText}</td>
-            <td>${asso.name}</td>
-            <td>${asso.credits}</td>
-        `;
-		// Add hover effect
-        
-
-        tr.addEventListener("mouseleave", () => {
-			showFullRanking=false; 
-			updateButtonsVisibility(); 
-            displayRanking(); // Reset to default top 6
-			
-			
-        });
-        tbody.appendChild(tr);
-    });
-}
-
-function updateButtonsVisibility() {
-    let buttons = document.querySelectorAll(".bottom-center-container");
-
-    buttons.forEach(button => {
-        button.classList.toggle("hidden", showFullRanking);
-    });
-}
-
-document.querySelector("#ranking-container").addEventListener("click", () => {
-
-    showFullRanking = !showFullRanking; // tggle true/false , switched to opposite value//
-    displayRanking();
-	updateButtonsVisibility();
-});
-
-
-
-// Function to show smaller slice around hovered row
-
-
-
-
-// Fonction d'envoie POST sur le Submit Credits// 
-// Async est nécessaire pour utiliser await fetch//
-async function addCredits() {
-	const uid = getUserId(); 
+// Function add credits// 
+async function addCredits() { 
     const nameInputElem = document.getElementById('asso-name');
     const creditsInputElem = document.getElementById('credits'); // récupère les crédits
 	if (!nameInputElem || !creditsInputElem) {
@@ -304,17 +155,14 @@ async function addCredits() {
         alert("Veuillez entrer un nom et un nombre de crédits valides (max 3).");
         return;
     }
-	//getting the id // 
-	const userId = getUserId(); 
 	// cette ligne est complexe : elle dit envoie la requête et attends que le serveur l'accepte sur la route POST//
     const response = await fetch('/ranking', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: nameInput, creditsToAdd: creditsInput, userId: uid })
+        body: JSON.stringify({ name: nameInput, creditsToAdd: creditsInput, })
 		// le body = tout ce qui est envoyé, dedans on demande l'éxécution de la fonction getUserId//
     });
 	console.log("le string nom + crédits a été envoyé sur la route POST");
-	console.log("here is the user's id :" + userId) ;
 	// vérification qu'il n'y a pas erreur du côté post//
 	if (!response.ok) {
     const errorData = await response.json(); // le JSON envoyé par ton serveur
@@ -324,7 +172,8 @@ async function addCredits() {
 
     data = await response.json();
 	ranking = data.ranking; 
-	console.log("la réponse JSON a été reçue" + JSON.stringify(data)); 
+	console.log("la réponse JSON a été reçue" + JSON.stringify(data));
+	hideBottomButtons(); 
 	triggerFlash(); 
 	spawnMoneyAndFlash(); 
 	showWinnerText(); 
@@ -335,114 +184,20 @@ async function addCredits() {
 
 
 
-// Submit name functions
 
 
-console.log("on en est là")
+// Gestion des animations--------------ANIMATION TRIGGERFLASH// 
 
-function openpage2 () {
-	window.location.href = "page2.html"
-	console.log("page 2 is been execited"); 
+
+// Show and hide bottom buttons// 
+function hideBottomButtons() {
+  document.querySelector('.bottom-center-container').style.display = "none";
 }
 
-function openpage4 () {
-	window.location.href = "page4.html"
+function showBottomButtons() {
+  document.querySelector('.bottom-center-container').style.display = "block";
 }
 
-function submitName() {
-	console.log("submitname is executed");
-    let name = document.getElementById("username").value;
-
-    if (name) {
-        closePopup();
-    } else {
-        alert("Please enter your name.");
-        return; // stop here if nothing was entered
-    }
-
-    fetch('/submit-name', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: 'username=' + encodeURIComponent(name)
-    })
-    .then(res => res.text())
-    .then(response => {
-        console.log("Server response:", response);
-    });
-}
-
-
-function submitName2() {
-    let name = document.getElementById("username2").value;
-    if (name) {
-        alert("Eugène te souhaite la bienvenue sur son site, " + name + "!");
-        closePopup2();
-    } else {
-        alert("Please enter your name.");
-        return; // stop here if nothing was entered
-    }
-
-    fetch('/submit-name', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: 'username=' + encodeURIComponent(name)
-    })
-    .then(res => res.text())
-    .then(response => {
-        console.log("Server response:", response);
-    });
-}
-
-console.log("on en est là")
-
-// followng sends data to server 
-//fetch sends a post request 
-// headers show how it's formatted 
-// body says it's a text named username 
-// All answers are sent to server which is managed by server.js 
-
-// Functions ASYNC// 
-
-
-async function loadRanking() {
-    const response = await fetch('/ranking');
-    data = await response.json();
-	ranking = data.ranking; 
-    displayRanking();
-	console.log("logged", ranking)
-}
-
-// 2 : fonctions event //
-let lasteventTimesstamp= null ; 
-
-	async function fetchrecentevents(){
-		try {
-			eventBox.innerHTML=""; 
-			const eventresponse = await fetch('/recent-events'); 
-			const events = await eventresponse.json(); 
-			// On vide la boite//
-			const eventbox = document.getElementById('eventBox'); 
-			eventBox.innerHTML=""; 
-			// Ensuite à chaque fois que events est redéfinit on en tire a property message pour la mettre dans boc// 
-			    events.forEach(event => {
-            const div = document.createElement('div');
-            div.textContent = event.message;
-			console.log(event.message)
-            eventBox.appendChild(div);
-			setTimeout(()=> {
-				div.remove(); 
-			}, 50000); 
-			});
-		}catch (err) {
-    console.error("Erreur fetch events:", err);
-		}
-	}
-
-
-// Do not redeclare the variable with const because it shadows the first one//
-
-
-// Animations sur le bouton ajouter// 
 function spawnMoneyAndFlash() {
  const container = document.getElementById('moneyContainer');
     for (let i = 0; i < 30; i++) {
@@ -497,6 +252,89 @@ function showWinnerText() {
     }, { once: true });
 } 
 
+
+
+
+
+
+//----------- GESTION DES RANKINGS---------------//
+// LOAD AND DISPLAY// 
+
+// Global function// 
+async function loadRanking() {
+    const response = await fetch('/ranking');
+    data = await response.json();
+	ranking = data.ranking; 
+    displayRanking();
+	console.log("logged", ranking)
+}
+
+
+
+// Display ranking// 
+// Afficher, vider, et renouveler le tableau//
+// A comprendre : ce script se lie a mon tableau HTML en modifiant mon tbody, mais pas les thead// 
+function displayRanking() {
+    let tbody = document.querySelector("#ranking-container tbody");
+    tbody.innerHTML = "";
+	//Ranking variable//
+	ranking.sort((a, b) => b.credits - a.credits);
+	// Boucle pour créér pour chaque association une ligne//
+	let dataToDisplay = showFullRanking ? ranking : ranking.slice(0, 6); //if show full ranking is false then show everything// This is a short version of if else//
+
+	dataToDisplay.forEach((asso, index) => {
+		let tr = document.createElement("tr");
+		let posText = index === 0 ? "🥇 1" :
+                      index === 1 ? "🥈 2" :
+                      index === 2 ? "🥉 3" : (index + 1);
+		//On ajoute à chaque ligne les cellules nécessaires// 
+		        tr.innerHTML = `
+            <td>${posText}</td>
+            <td>${asso.name}</td>
+            <td>${asso.credits}</td>
+        `;
+		// Add hover effect
+        
+
+        tr.addEventListener("mouseleave", () => {
+			showFullRanking=false; 
+			updateButtonsVisibility(); 
+            displayRanking(); // Reset to default top 6
+			
+			
+        });
+        tbody.appendChild(tr);
+    });
+}
+
+
+// -----Gestion du display du ranking WITHOUT SLICE----------//
+
+
+function updateButtonsVisibility() {
+    let buttons = document.querySelectorAll(".bottom-center-container");
+
+    buttons.forEach(button => {
+        button.classList.toggle("hidden", showFullRanking);
+    });
+}
+
+document.querySelector("#ranking-container").addEventListener("click", () => {
+
+    showFullRanking = !showFullRanking; // tggle true/false , switched to opposite value//
+    displayRanking();
+	updateButtonsVisibility();
+});
+
+
+
+
+// ------FETCH THREE FIRSTS-----// 
+
+
+
+
+
 // Function that sends three first ones of ranking at the end of the day/ 
 async function fetchthreefirst() {
 	//first thing : getting current ranking// 
@@ -517,6 +355,13 @@ async function fetchthreefirst() {
 	console.log(result); 
 }
 
+
+
+
+
+//--------NOTIFICATIONS SERVICE WORKER--------//
+//Lançée au démarrage : voir automatic functions//
+
 function loadsw() { 
 		if ('serviceWorker' in navigator) {
 			navigator.serviceWorker.register('sw.js') // Install background js and start running it// // This returns promise so we can use then and catch//
@@ -530,8 +375,64 @@ function loadsw() {
 		console.error('Service Workers not supported'); 
 	}
 }
+
+
+
+//------FONCTIONS EVENTS------// 
+let lasteventTimesstamp= null ; 
+
+	async function fetchrecentevents(){
+		try {
+			eventBox.innerHTML=""; 
+			const eventresponse = await fetch('/recent-events'); 
+			const events = await eventresponse.json(); 
+			// On vide la boite//
+			const eventbox = document.getElementById('eventBox'); 
+			eventBox.innerHTML=""; 
+			// Ensuite à chaque fois que events est redéfinit on en tire a property message pour la mettre dans boc// 
+			    events.forEach(event => {
+            const div = document.createElement('div');
+            div.textContent = event.message;
+			console.log(event.message)
+            eventBox.appendChild(div);
+			setTimeout(()=> {
+				div.remove(); 
+			}, 50000); 
+			});
+		}catch (err) {
+    console.error("Erreur fetch events:", err);
+		}
+	}
+
+
+
+
+// --Fonction de pages// 
+
+function openpage3() {
+    window.open("page3.html", "_blank");
+}
+
+function openpage2 () {
+	window.location.href = "page2.html"
+	console.log("page 2 is been execited"); 
+}
+
+document.getElementById('login').addEventListener('click', () => {
+    // This will redirect the browser to your Google login route
+    window.location.href = '/auth/google';
+  });
+
+
+
+
+
+
+
+// --------Fonctions automatiques------// 
+
 // 1 hour = 60min × 60sec × 1000ms
-setInterval(fetchthreefirst, 1000000);
+/*setInterval(fetchthreefirst, 1000000);*/
 
 // Lancement des fonctions async// 
 // Finally : adding event listener to window loading to load the ranking 
@@ -541,7 +442,3 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 setInterval(fetchrecentevents, 2000);
-
-
-
-
