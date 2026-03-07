@@ -12,7 +12,7 @@ function getNext7Days() {
     const today = new Date();
 	// Créér une boucle pour décaler la date aux prochains jours//
 	// On utilise new pour ajouter dans l'objet sans modifier l'objet global// 
-    for (let i = 0; i < 21; i++) {
+    for (let i = 0; i < 35; i++) {
         const date = new Date(today);
         date.setDate(today.getDate() + i);
         days.push(date);
@@ -300,4 +300,5 @@ function spawnMoneyAndFlash() {
             money.remove();
         });
     }
+
 }
