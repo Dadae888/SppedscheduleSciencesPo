@@ -669,6 +669,99 @@ POPUPS
 #closeBtn:hover {
 
     background: #b02a37;
+	
+}
+
+
+
+
+/* =================================================
+CREDITS POPUP
+================================================= */
+
+.cpopup {
+
+    position: fixed;
+
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+
+    background: linear-gradient(135deg, #ffffff, #ffe6f2);
+
+    color: #cc0066;
+
+    padding: 30px;
+
+    border-radius: 14px;
+
+    width: 320px;
+
+    text-align: center;
+
+    border: 3px solid #ff66b2;
+
+    box-shadow:
+        0 0 20px rgba(255,105,180,0.6),
+        0 0 40px rgba(255,182,193,0.4);
+
+    z-index: 10050;
+}
+
+.cpopup h3 {
+
+    margin-top: 0;
+
+    color: #ff2e9f;
+
+    text-shadow: 0 0 8px rgba(255,105,180,0.6);
+}
+
+.cpopup input {
+
+    width: 90%;
+
+    padding: 8px;
+
+    border-radius: 6px;
+
+    border: 1px solid #ff66b2;
+
+    outline: none;
+
+    margin-top: 5px;
+}
+
+.cpopup input:focus {
+
+    box-shadow: 0 0 8px #ff66b2;
+}
+
+/* bouton ajouter */
+
+#submitCreditsBtn {
+
+    background: linear-gradient(45deg,#28a745,#4cd964);
+
+    color: white;
+
+    border-radius: 8px;
+
+    padding: 8px 14px;
+}
+
+/* bouton annuler */
+
+.cpopup button:last-child {
+
+    background: linear-gradient(45deg,#dc3545,#ff6b6b);
+
+    color: white;
+
+    border-radius: 8px;
+
+    padding: 8px 14px;
 }
 
 /* =================================================
