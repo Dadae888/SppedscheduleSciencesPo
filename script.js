@@ -5,6 +5,7 @@ let subscription;
 let showFullRanking = false;
 let data4;
 
+
 // Pour vider les fichiers, utiliser echo//
 // Key definition of variables : function parameter such as displayRanking(ranking) is a variable that is created when the function runs but exists only inside the function//
 // Local variables such as const ranking or let ranking that are created inside functions have nothing to do with global variables of the same name//
@@ -27,16 +28,19 @@ function openalert() {
 }
 
 
-async function givelogin() { 
-	app.post('/login', (req,res)=>{
-    
-		const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+async function givelogin() {
+	console.log("login executed"); 
+  if (sessionStorage.getItem("loginSent")) return;
 
-		console.log(`[LOGIN] ${new Date().toISOString()} | IP: ${ip}`);
+  sessionStorage.setItem("loginSent", "true");
 
-		res.json({success:true});
-	});
-};
+  await fetch('/login-log', {
+    method: 'POST'
+  });
+
+}
+
+givelogin(); 
 
 
 // Fetching visits 
@@ -482,7 +486,6 @@ window.addEventListener('DOMContentLoaded', () => {
 	fetchthreefirst();  
 	hidelogin(); 
 	closealert(); 
-	givelogin(); 
 });
 
 setInterval(fetchrecentevents, 2000);

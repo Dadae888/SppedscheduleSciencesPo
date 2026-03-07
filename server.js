@@ -72,10 +72,43 @@ const upload = multer({ storage });
   
   
  // Inform login// 
- app.use((req, res, next) => {
-    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-    console.log(`[VISIT] ${new Date().toISOString()} | IP: ${ip} | ${req.method} ${req.url}`);
+ 
+const cookieParser = require('cookie-parser');
+const crypto = require('crypto');
+
+app.use(cookieParser());
+
+
+app.use((req, res, next) => {
+
+    let visitorId = req.cookies.visitorId;
+
+    if (!visitorId) {
+
+        visitorId = crypto.randomUUID();
+
+        res.cookie('visitorId', visitorId, {
+            maxAge: 1000 * 60 * 60 * 24, // 24h
+            httpOnly: true
+        });
+
+        const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+
+        console.log(`[NEW VISIT] ${new Date().toISOString()} | IP: ${ip} | visitorId: ${visitorId}`);
+    }
+
     next();
+
+});
+
+app.post('/login-log', (req, res) => {
+
+    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+
+    console.log(`[LOGIN] ${new Date().toISOString()} | IP: ${ip}`);
+
+    res.json({ success: true });
+
 });
   
   
@@ -551,8 +584,13 @@ app.post('/api/page2events', async (req, res) => {
     // 1️⃣ Récupération des données envoyées par le frontend
     const { title, date, time, endtime, place, Eventassoname, eventid, attenders } = req.body;
 	console.log(req.body); 
+	const name = req.body.Eventassoname
+		.trim()
+		.toLowerCase()
+		.normalize("NFD")
+		.replace(/[\u0300-\u036f]/g, ""); 
 
-    if (!title || !date || !time || !place || !Eventassoname || !eventid) {
+    if (!title || !date || !time || !place || !name || !eventid) {
       return res.status(400).json({ error: 'Missing fields' });
     }
 
@@ -568,20 +606,20 @@ app.post('/api/page2events', async (req, res) => {
            place = EXCLUDED.place,
            eventassoname = EXCLUDED.eventassoname,
            attenders = EXCLUDED.attenders`,
-      [eventid, title, date, time, endtime, place, Eventassoname, attenders || []]
+      [eventid, title, date, time, endtime, place, name, attenders || []]
     );
 
     // 3️⃣ Mettre à jour le ranking (+3 crédits pour l’association)
     const rankingResult = await pool.query(
       "SELECT * FROM ranking WHERE LOWER(name) = LOWER($1)",
-      [Eventassoname]
+      [name]
     );
 
-    if (rankingResult.rowCount > 0) {
+    if (rankingResult.rows.length > 0) { 
       // Si existant, ajouter 3 crédits
       await pool.query(
         "UPDATE ranking SET credits = credits + 3 WHERE LOWER(name) = LOWER($1)",
-        [Eventassoname]
+        [name]
       );
     } else {
       // Sinon, créer nouvelle entrée
