@@ -13,6 +13,32 @@ let data4;
 // Fetch is async (it doesn't block code, it sends a request, returns a promise until there is response, and then returns response//
 
 
+// Temporary : cacher le login + alert popup// 
+function hidelogin() {
+  document.querySelector('.google-login-btn').classList.add("hidden");
+}
+
+function closealert() {
+  document.getElementById("openalertpop").style.display = "none";
+}
+
+function openalert() { 
+	document.getElementById('openalertpop').style.display='flex'; 
+}
+
+
+async function givelogin() { 
+	app.post('/login', (req,res)=>{
+    
+		const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+
+		console.log(`[LOGIN] ${new Date().toISOString()} | IP: ${ip}`);
+
+		res.json({success:true});
+	});
+};
+
+
 // Fetching visits 
 fetch('/visit') 
 	// converting the received answer to js
@@ -143,6 +169,8 @@ document.getElementById('submitCreditsBtn').addEventListener('click', addCredits
 
 // Function add credits// 
 async function addCredits() { 
+	openalert();  
+	return ; 
     const nameInputElem = document.getElementById('asso-name');
     const creditsInputElem = document.getElementById('credits'); // récupère les crédits
 	if (!nameInputElem || !creditsInputElem) {
@@ -177,7 +205,8 @@ async function addCredits() {
 	triggerFlash(); 
 	spawnMoneyAndFlash(); 
 	showWinnerText(); 
-    displayRanking(ranking); // met à jour ton tableau HTML
+    displayRanking(ranking);// met à jour ton tableau HTML
+	showBottomButtons(); 
 }
 
 
@@ -191,11 +220,11 @@ async function addCredits() {
 
 // Show and hide bottom buttons// 
 function hideBottomButtons() {
-  document.querySelector('.bottom-center-container').style.display = "none";
+  document.querySelector('.bottom-center-container').classList.add("hidden");
 }
 
 function showBottomButtons() {
-  document.querySelector('.bottom-center-container').style.display = "block";
+  document.querySelector('.bottom-center-container').classList.remove("hidden");
 }
 
 function spawnMoneyAndFlash() {
@@ -308,6 +337,7 @@ function displayRanking() {
 }
 
 
+
 // -----Gestion du display du ranking WITHOUT SLICE----------//
 
 
@@ -337,13 +367,17 @@ document.querySelector("#ranking-container").addEventListener("click", () => {
 
 // Function that sends three first ones of ranking at the end of the day/ 
 async function fetchthreefirst() {
+	console.log("fetchthreefirst is executed"); 
 	//first thing : getting current ranking// 
 	const response = await fetch('/ranking');
     data2 = await response.json();
 	console.log(data2); 
 	const Topthree = data2.ranking
 		.slice(0, 3)          // take first 3 objects
-		.map(item => item.name);  // keep only the name
+		.map((item, index) => ({
+			position: index + 1,
+			name: item.name
+		}));  // keep only the name
 	console.log(Topthree); 
 	const response2 = await fetch('/api/fetchthreefirst', {
         method: 'POST',
@@ -418,6 +452,11 @@ function openpage2 () {
 	console.log("page 2 is been execited"); 
 }
 
+function openpage4 () {
+	window.location.href = "page4.html"
+	console.log("page 4 is been execited"); 
+}
+
 document.getElementById('login').addEventListener('click', () => {
     // This will redirect the browser to your Google login route
     window.location.href = '/auth/google';
@@ -431,14 +470,19 @@ document.getElementById('login').addEventListener('click', () => {
 
 // --------Fonctions automatiques------// 
 
+
 // 1 hour = 60min × 60sec × 1000ms
-/*setInterval(fetchthreefirst, 1000000);*/
+/*setInterval(fetchthreefirst, 1000);*/
 
 // Lancement des fonctions async// 
 // Finally : adding event listener to window loading to load the ranking 
 window.addEventListener('DOMContentLoaded', () => {
     loadRanking();
     loadsw();
+	fetchthreefirst();  
+	hidelogin(); 
+	closealert(); 
+	givelogin(); 
 });
 
 setInterval(fetchrecentevents, 2000);

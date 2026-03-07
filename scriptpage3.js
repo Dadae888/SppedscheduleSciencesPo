@@ -1,5 +1,6 @@
 window.addEventListener('DOMContentLoaded', loadPromos);
 
+
 // Pour limiter aux trois premiers/ 
 /* 
 Créér une variable ranking trois premier dans un fichier, ou plutot un objet
@@ -15,28 +16,33 @@ let selectedAsso = null ;
 
 
 async function loadRankingButtons() {
+	console.log("loadrankingbuttons is executed"); 
     const response = await fetch('/api/fetchthreefirst');
     const topThree = await response.json();
+	console.log(topThree); 
 
     const container = document.getElementById('ranking-buttons');
     container.innerHTML = ''; // clear previous buttons
 
-    topThree.forEach(name => {
-        const button = document.createElement('button');
-        button.textContent = name;
-        button.className = 'ranking-btn';
-		button.addEventListener('click', () => {
-			document.querySelectorAll('.ranking-btn')
-			.forEach(btn => btn.classList.remove('selected'));
-			// Add selected class to clicked button
-			button.classList.add('selected');
+    topThree.forEach(entry => {
+    const button = document.createElement('button');
+    button.textContent = entry.name;
+    button.className = 'ranking-btn';
 
-            selectedAsso = name;
-            console.log("Selected:", selectedAsso);
-        });
-        container.appendChild(button);
+    button.addEventListener('click', () => {
+        document.querySelectorAll('.ranking-btn')
+        .forEach(btn => btn.classList.remove('selected'));
+
+        button.classList.add('selected');
+
+        selectedAsso = entry.name;
+        console.log("Selected:", selectedAsso);
     });
-}
+
+    container.appendChild(button);
+});
+    
+}; 
 
 
 
@@ -45,6 +51,8 @@ function showForm(sectionId) {
 	// Section id est une variable de la fonction, on n'a pas besoin de redire qu'on utilise le id de la section//
 	// En fait, quand on appelle "showform(section1), on dit que l'on appelle une variable, qui dans notre fonction s'appelle id, c'est une manière de ne pas érire xx fois//
 	loadRankingButtons();  
+	alert("petit malin.e, cet espace ne sera accessible qu'après ouverture à la promo, dans la semaine"); 
+	return ; 
     const section = document.getElementById(sectionId);
 	// Look at first line of HTML : it defines sectionid : when submit is clicked, submit form is loaded, with the argument sectionid that corresponds thanks to showform to the right one//
 	// Explanation of HTML : onsubmit is like onclick for button. We also want to pass the object event. 
@@ -151,16 +159,19 @@ async function loadPromos() {
 	// It names a variable section that corresponds to each sectionid, but if it is empty then section does't exist//
     if (section) section.innerHTML = ''; // clear previous content
 	}); 
-	 // 3️⃣ Populate each section with its promos
+	 // 3️⃣ Populate each section with its promosconsole.log(promos); 
     promos.forEach(promo => {
+		
 		//finding corresponding section in promo//
         const section = document.getElementById(promo.sectionId);
+		console.log('promo keys:', Object.keys(promo));
         if (!section) return; // skip if section not found
 		const div = document.createElement('div');   // Create a new <div> for this promo
-		div.className = 'promo-content';             // Add a CSS class for styling
+		div.className = 'promo-content';       		// Add a CSS class for styling
+		console.log(promo.eventassoname); 
 		// Build inner HTML for the promo
 		div.innerHTML = `
-			<img src="/uploads/${promo.image}" class="promo-img">
+			<img src="${promo.image}" class="promo-img">
 			<h2 class="asso-name">${promo.name}</h2>
 			<p class="promo-text">${promo.content}</p>
 			<button class="fill-btn" onclick="showForm('${promo.sectionId}')">Modifier</button>

@@ -25,6 +25,7 @@ function getNext7Days() {
 async function loadEvents() {
     const res = await fetch('/api/page2events');
     const page2events = await res.json();
+	console.log(page2events); 
     renderTimetable(page2events);
 }
 
@@ -74,14 +75,12 @@ async function openAttendersList(eventData) {
 	// Don't forther that event data is defined by button, so we are looking for the button on which we just clicked//
     const res = await fetch(`/api/attenderslist?eventid=${eventData.eventid}`); // That looks for the parameters associated to a date and a time//
     const attenders = await res.json();
-	const overlay = document.createElement('div');
-    overlay.className = 'popup-overlay';
 
-    // Add overlay to body FIRST
-    document.body.appendChild(overlay);
-    // Create popup
-    const popup = document.createElement('div');
-    popup.className = 'attenders-popup';
+	const overlay = document.createElement('div');
+	overlay.className = 'popup-overlay';
+
+	const popup = document.createElement('div');
+	popup.className = 'attenders-popup';
 
     // Build list HTML
     let listHTML = "<ul>";
@@ -97,7 +96,8 @@ async function openAttendersList(eventData) {
         <button id="closeBtn">Fermer</button>
     `;
 
-    document.body.appendChild(popup);
+    overlay.appendChild(popup);
+	document.body.appendChild(overlay);
 
     // Join button logic
     document.getElementById('joinBtn').addEventListener('click', async () => {
@@ -300,5 +300,4 @@ function spawnMoneyAndFlash() {
             money.remove();
         });
     }
-
 }

@@ -58,7 +58,7 @@ const form = document.getElementById('eventform2');
 				// 🔹 5. Ajouter un tooltip : Title c'est un HTML natif, dès qu'on l'appelle il s'affiche//
 				dayEl.setAttribute(
 					"data-tooltip",
-    `				${eventData.title} - ${eventData.Eventassoname} @ ${eventData.time} (${eventData.place})`
+    `				${eventData.title} - ${eventData.eventassoname} @ ${eventData.time} (${eventData.place})`
 );
 			}
 
@@ -127,7 +127,7 @@ form.addEventListener('submit', async (e) => {
     await fetch('/api/keyevents', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, date, time, place, Eventassoname, eventid, })
+        body: JSON.stringify({ title, date, time, place, eventassoname, eventid, })
     });
 	form.reset(); 
 	loadkeyevents(); 
@@ -172,12 +172,12 @@ function generateNext6Months() {
 
 function openeventform() {
     document.getElementById('eventform2').style.display = "block";
-    document.getElementById('form-overlay').style.display = "block";
+    document.getElementById('overlay').style.display = "block";
 }
 
 function closeeventform() {
     document.getElementById('eventform2').style.display = "none";
-    document.getElementById('form-overlay').style.display = "none";
+    document.getElementById('overlay').style.display = "none";
 }
 
 // Close on submit
