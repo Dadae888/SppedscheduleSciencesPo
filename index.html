@@ -4,41 +4,87 @@
     <title>SpeedscheduleSciencesPo</title>
 	<link rel="stylesheet" href="style.css">
 
-    <style>
-        .popup {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.3);
-            border-radius: 8px;
-        }
-
-        .overlay {
-            display: none;
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            top: 0;
-            left: 0;
-        }
-    </style>
 </head>
+
+<body>
+
+
+
+
+ <button class="google-login-btn" id="login">
+    <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google logo">
+    Sign in with Google
+ </button>
+<div class="overlay" id="overlay"></div>
+<div id="greetingText" style="margin-top: 20px; font-size: 24px;"></div>
+
+<div class="bienvenue-container">
+    <h1 class="bienvenue">Speedschedule</h1>
+</div>
+
+<!-- Logo indépendant -->
+<img src="logospeedschedule.png" alt="Logo Speedschedule" class="logo">
+
+<div class="top-bar">
+	<button 
+		class="left-btn" 
+		style="background-color: red ; " 
+		onclick="openevents()">
+		Consulter/Ajouter des évènements
+		</button>
+	<button 
+		class="right-btn" 
+		id="addTextBtn"
+		onclick="openCreditPopup()">
+		Donner des crédits $
+	</button>
+ </div>
+ 
+ <div class="ranking-wrapper">
+
+ 
+ <table id="ranking-container" class="ranking-table">
+    <thead>
+        <tr>
+            <th>Position</th>
+            <th>Association</th>
+            <th>Crédits</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+ </div>
+ 
+
+
+
+<div class="bottom-center-container">
+  <button class="button-gold bottom-btn" onclick="openpage3()">Page des communications</button>
+  <button class="button-gold" onclick="openpage4()">Dates clés à connaître</button>
+  
+</div>
+
+
 <div class="google-calendar-disclosure">
     <strong>Intégration Google Calendar</strong><br>
-    SpeedSchedule utilise Google Calendar afin d’ajouter automatiquement des événements
+    SpeedSchedule utilisera bientôt Google Calendar afin d’ajouter automatiquement des événements
     au calendrier des étudiants et d’évaluer leurs disponibilités.
     Aucune donnée n’est partagée avec des tiers.
 </div>
-<body>
+
+
+
+
 <div id="flashLayer"></div>
 <div class="money-container" id="moneyContainer"></div>
 <!-- Conteneur pour le texte gagnant -->
 <div id="winnerTextContainer"></div>
+
+
+
+
+
 
 <div id="eventBox" style="
     position: fixed;
@@ -55,22 +101,12 @@
     z-index: 10002;
 "></div>
 
-<table id="ranking-container" class="ranking-table">
-    <thead>
-        <tr>
-            <th>Position</th>
-            <th>Association</th>
-            <th>Crédits</th>
-        </tr>
-    </thead>
-    <tbody>
-    </tbody>
-</table>
+
 
 <div class="popup" id="creditPopup" style="display:none;">
     <h3>Ajouter des crédits à une association</h3>
     <label for="asso-name">Nom de l'association :</label>
-    <input type="text" id="asso-name" placeholder="Ex: Ecophilia">
+    <input type="text" id="asso-name" placeholder="attention orthographe. ">
     <br><br>
     <label for="credits">Nombre de crédits :</label>
     <input type="number" id="credits" placeholder="Ex: 2">
@@ -79,9 +115,24 @@
     <button onclick="closeCreditPopup()">Annuler</button>
 </div>
 
+<!-- TEMPORARY POPUP -->
+<div id="openalertpop">
+  <div class="popup-content">
+    <p>
+      <strong>Eugène débloquera la fonction d'ajout de crédits au moment de l'ouverture à la promo :)</strong><br><br>
+      Si tu es copres, tu peux, en attendant, gagner <strong>3 crédits par évènement ajouté.</strong><br><br>
+      <strong>MAIS SURTOUT</strong>, commence dès maintenant à rallier tes soutiens dans la promo !<br>
+      Parle du site aux membres de ton asso pour qu'ils te donnent tous leur crédits dès l'ouverture.<br><br>
+      Tu auras ainsi une chance de <strong>débloquer l'accès à l'espace com !</strong>
+    </p>
+
+    <button onclick="document.getElementById('openalertpop').style.display='none'">
+      fermer
+    </button>
+  </div>
+</div>
 
 
-*
 
 
 
@@ -90,39 +141,11 @@
 </div>
 
 
-<div class="top-bar">
-	<button 
-		class="left-btn" 
-		style="background-color: red ; " 
-		onclick="openevents()">
-		Consulter/Ajouter des évènements
-		</button>
-		<button 
-	class="right-btn" 
-    id="addTextBtn"
-	onclick="openCreditPopup()">
-    Donner des crédits $
-  </button>
- </div>
+
  
- <div class="bienvenue-container">
-    <img src="logospeedschedule.png" alt="logo gauche" class="bienvenue-logo">
-    <h1 class="bienvenue">Speedschedule</h1>
-    <img src="logospeedschedule.png" alt="logo droite" class="bienvenue-logo">
-</div>
 
-<div class="overlay" id="overlay"></div>
-<div id="greetingText" style="margin-top: 20px; font-size: 24px;"></div>
 
-<div class="bottom-center-container">
- <button class="google-login-btn" id="login">
-    <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google logo">
-    Sign in with Google
-  </button>
-  <button class="button-gold bottom-btn" onclick="openpage3()">Page des communications</button>
-  <button class="button-gold" onclick="openpage4()">Dates clés à connaître</button>
-  
-</div>
+
  
  
 <footer>

@@ -1,5 +1,5 @@
 // Database server code// 
-
+// Still have to resolve : credits in ranking 3 for promo ; and keyevents not loading// 
 // starting server// 
 
 
@@ -71,7 +71,12 @@ const upload = multer({ storage });
   
   
   
-  
+ // Inform login// 
+ app.use((req, res, next) => {
+    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+    console.log(`[VISIT] ${new Date().toISOString()} | IP: ${ip} | ${req.method} ${req.url}`);
+    next();
+});
   
   
   
@@ -341,7 +346,11 @@ app.post('/ranking', async (req, res) => {
 		const googleId = req.user.profile.id; 
   }
   
-  const name = req.body.name;           // nom de l'asso à créditer
+  const name = req.body.name
+	.trim()
+	.toLowerCase()
+	.normalize("NFD")
+	.replace(/[\u0300-\u036f]/g, "");         // nom de l'asso à créditer
   const creditsToAdd = parseInt(req.body.creditsToAdd);
 
   if (!name || isNaN(creditsToAdd)) return res.status(400).json({ error: 'Nom ou crédits invalides' });
@@ -410,10 +419,13 @@ app.get('/api/promo', async (req, res) => {
 
 app.post('/api/promo', upload.single('image'), async (req, res) => {
   try {
-    // 1️⃣ Vérification connexion
-    if (!req.user) return res.status(401).json({ error: "User not logged in" });
-
-    const googleId = req.user.profile.id; // conservé au cas où
+    let googleId; 
+	if (!req.user) { 
+		googleId= 0000 ; 
+		/*return res.status(401).json({ error: 'Not logged in' });*/ 
+	} else { 
+		const googleId = req.user.profile.id; 
+  }
 
     // 2️⃣ Récupération des données
     const { name, content, date, sectionId } = req.body;
@@ -465,17 +477,17 @@ app.post('/api/promo', upload.single('image'), async (req, res) => {
 
     // 5️⃣ Insérer ou remplacer si sectionId existe// Excluded permet de redécaler en cas d'existence d'ID//
     // 5️⃣ Insérer ou remplacer si sectionId existe// Excluded permet de redécaler en cas d'existence d'ID//
-    await pool.query(
-      `INSERT INTO promo(id, name, content, image, date, sectionid)
-       VALUES($1,$2,$3,$4,$5,$6)
-       ON CONFLICT (sectionid)
-       DO UPDATE SET
-         name = EXCLUDED.name,
-         content = EXCLUDED.content, 
-         image = EXCLUDED.image,
-         date = EXCLUDED.date`,
-      [newPromo.id, newPromo.name, newPromo.content, newPromo.image, newPromo.date, newPromo.sectionId]
-    );
+	await pool.query(
+	`INSERT INTO promo(id, name, content, image, date, "sectionId")
+	VALUES($1,$2,$3,$4,$5,$6)
+	ON CONFLICT ("sectionId")
+	DO UPDATE SET
+		name = EXCLUDED.name,
+		content = EXCLUDED.content,
+		image = EXCLUDED.image,
+		date = EXCLUDED.date`,
+	[newPromo.id, newPromo.name, newPromo.content, newPromo.image, newPromo.date, newPromo.sectionId]
+	);
 
     console.log("Promo saved:", newPromo);
     res.json({ success: true, promo: newPromo });
@@ -493,8 +505,11 @@ app.post('/api/promo', upload.single('image'), async (req, res) => {
 app.get('/api/page2events', async (req, res) => {
   try {
     const result = await pool.query(
-      "SELECT * FROM page2events ORDER BY date, time"
-    );
+	`SELECT eventassoname AS eventassoname, date, time, place, title, eventid 
+	FROM page2events
+	ORDER BY date, time`
+	);
+
     res.json(result.rows); // renvoie exactement un tableau d'objets comme avant
   } catch (err) {
     console.error("Error fetching events:", err);
@@ -509,6 +524,7 @@ app.get('/api/page2events', async (req, res) => {
 app.get('/api/attenderslist', async (req, res) => {
   try {
     const { eventid } = req.query;
+	console.log(eventid); 
     if (!eventid) return res.status(400).json({ error: "Missing eventid" });
 
     const result = await pool.query(
@@ -534,6 +550,7 @@ app.post('/api/page2events', async (req, res) => {
 
     // 1️⃣ Récupération des données envoyées par le frontend
     const { title, date, time, endtime, place, Eventassoname, eventid, attenders } = req.body;
+	console.log(req.body); 
 
     if (!title || !date || !time || !place || !Eventassoname || !eventid) {
       return res.status(400).json({ error: 'Missing fields' });
@@ -569,13 +586,13 @@ app.post('/api/page2events', async (req, res) => {
     } else {
       // Sinon, créer nouvelle entrée
       await pool.query(
-        "INSERT INTO ranking(name, credits) VALUES($1, $2,)",
-        [Date.now(), Eventassoname, 3]
+        "INSERT INTO ranking(name, credits) VALUES($1, $2)",
+        [Eventassoname, 3]
       );
     }
 
     // 4️⃣ Réponse au frontend
-    res.json({ success: true, googleId, eventid });
+    res.json({ success: true, /*googleId,*/ eventid });
 
   } catch (err) {
     console.error("Error saving event:", err);
@@ -614,7 +631,7 @@ app.post('/api/keyevents', async (req, res) => {
     );
 
     // 3️⃣ Réponse au frontend (inchangée)
-    res.json({ success: true, googleId, eventid });
+    res.json({ success: true, eventid });
 
   } catch (err) {
     console.error("Error saving keyevent:", err);
@@ -767,9 +784,9 @@ app.post('/api/fetchthreefirst', async (req, res) => {
 	for (const entry of Topthree) {
 
 		await pool.query(
-			`INSERT INTO ranking3(position,name,credits)
-			 VALUES($1,$2,$3)`,
-			[entry.position, entry.name, entry.credits]
+			`INSERT INTO ranking3(position,name)
+			 VALUES($1,$2)`,
+			[entry.position, entry.name]
 		);
 
 	}
