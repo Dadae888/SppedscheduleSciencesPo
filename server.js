@@ -80,7 +80,6 @@ const crypto = require('crypto');
 
 app.use(cookieParser());
 
-
 app.use((req, res, next) => {
 
     let visitorId = req.cookies.visitorId;
@@ -94,13 +93,19 @@ app.use((req, res, next) => {
             httpOnly: true
         });
 
-        const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+        // vraie IP derrière proxy
+        const forwarded = req.headers['x-forwarded-for'];
+        const ip = forwarded ? forwarded.split(',')[0] : req.socket.remoteAddress;
 
-        console.log(`[NEW VISIT] ${new Date().toISOString()} | IP: ${ip} | visitorId: ${visitorId}`);
+        // navigateur / bot info
+        const userAgent = req.headers['user-agent'];
+
+        console.log(
+            `[NEW VISIT] ${new Date().toISOString()} | IP: ${ip} | visitorId: ${visitorId} | UA: ${userAgent}`
+        );
     }
 
     next();
-
 });
 
 app.get("/debug-tables", async (req, res) => {
@@ -986,3 +991,4 @@ app.post('/api/page5events', async (req, res) => {
     res.status(500).json({ error: "Database error" });
   }
 });
+
