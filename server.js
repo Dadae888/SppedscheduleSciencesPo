@@ -44,6 +44,8 @@ const supabase = createClient(
 
 
 
+
+
 // Loading file system module 
 
 
@@ -101,7 +103,6 @@ app.use((req, res, next) => {
 
 });
 
-// Debug for database// 
 app.get("/debug-tables", async (req, res) => {
   try {
     const result = await pool.query(`
@@ -877,5 +878,111 @@ app.get('/privacy-policy', (req, res) => {
 app.get('/terms-of-service', (req, res) => {
   res.sendFile(__dirname + '/public/terms-of-service.html');
 });
-
 // Starting real code for uploads //
+
+
+
+
+// Gestion des réunions hebdomadaires// 
+app.get('/api/page5events', async (req, res) => {
+  try {
+    const result = await pool.query(
+	`SELECT eventassoname AS eventassoname, date, time, place, title, eventid 
+	FROM page5events
+	ORDER BY date, time`
+	);
+
+    res.json(result.rows); // renvoie exactement un tableau d'objets comme avant
+  } catch (err) {
+    console.error("Error fetching events:", err);
+    res.status(500).json({ error: "Database error" });
+  }
+});
+
+
+
+
+// Gestion des attenders : pas de modification frontend// 
+app.get('/api/attenderslist2', async (req, res) => {
+  try {
+    const { eventid } = req.query;
+	console.log(eventid); 
+    if (!eventid) return res.status(400).json({ error: "Missing eventid" });
+
+    const result = await pool.query(
+      "SELECT attenders FROM page5events WHERE eventid = $1",
+      [eventid]
+    );
+
+    if (result.rowCount === 0) return res.status(404).json({ error: "Event not found" });
+
+    res.json(result.rows[0].attenders || []);
+  } catch (err) {
+    console.error("Error fetching attenders:", err);
+    res.status(500).json({ error: "Database error" });
+  }
+});
+
+// Gestion du POST ; erreur 401 : pas de login// On la met en comment pour l'instant// 
+app.post('/api/page5events', async (req, res) => {
+  try {
+    // 0️⃣ Vérification login Google
+	/*if (!req.user) return res.status(401).json({ error: "User not logged in" });
+    const googleId = req.user.profile.id; // on conserve le Google ID pour usage futur ou audit */
+
+    // 1️⃣ Récupération des données envoyées par le frontend
+    const { title, date, time, endtime, place, Eventassoname, eventid, attenders } = req.body;
+	console.log(req.body); 
+	const name = req.body.Eventassoname
+		.trim()
+		.toLowerCase()
+		.normalize("NFD")
+		.replace(/[\u0300-\u036f]/g, ""); 
+
+    if (!title || !date || !time || !place || !name || !eventid) {
+      return res.status(400).json({ error: 'Missing fields' });
+    }
+
+    // 2️⃣ Ajouter ou remplacer l'événement dans la base SQL
+    await pool.query(
+      `INSERT INTO page5events(eventid, title, date, time, endtime, place, eventassoname, attenders)
+       VALUES($1::bigint,$2,$3,$4,$5,$6,$7,$8)
+       ON CONFLICT (eventid) DO UPDATE
+       SET title = EXCLUDED.title,
+           date = EXCLUDED.date,
+           time = EXCLUDED.time,
+           endtime = EXCLUDED.endtime,
+           place = EXCLUDED.place,
+           eventassoname = EXCLUDED.eventassoname,
+           attenders = EXCLUDED.attenders`,
+      [eventid, title, date, time, endtime, place, name, attenders || []]
+    );
+
+    // 3️⃣ Mettre à jour le ranking (+3 crédits pour l’association)
+    const rankingResult = await pool.query(
+      "SELECT * FROM ranking WHERE LOWER(name) = LOWER($1)",
+      [name]
+    );
+
+    if (rankingResult.rows.length > 0) { 
+      // Si existant, ajouter 3 crédits
+      await pool.query(
+        "UPDATE ranking SET credits = credits + 3 WHERE LOWER(name) = LOWER($1)",
+        [name]
+      );
+    } else {
+      // Sinon, créer nouvelle entrée
+      await pool.query(
+        "INSERT INTO ranking(name, credits) VALUES($1, $2)",
+        [Eventassoname, 1]
+      );
+    }
+
+    // 4️⃣ Réponse au frontend
+    res.json({ success: true, /*googleId,*/ eventid });
+
+  } catch (err) {
+    console.error("Error saving event:", err);
+    res.status(500).json({ error: "Database error" });
+  }
+});
