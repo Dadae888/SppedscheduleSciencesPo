@@ -469,6 +469,11 @@ function openpage4 () {
 	console.log("page 4 is been execited"); 
 }
 
+function openpage5 () {
+	window.location.href = "reu.html"
+	console.log("page 5 is been execited"); 
+}
+
 document.getElementById('login').addEventListener('click', () => {
     // This will redirect the browser to your Google login route
     window.location.href = '/auth/google';
