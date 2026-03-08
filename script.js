@@ -27,6 +27,14 @@ function openalert() {
 	document.getElementById('openalertpop').style.display='flex'; 
 }
 
+function openalert2() { 
+	document.getElementById('openalertpop2').style.display='flex'; 
+}
+
+function closealert2() {
+  document.getElementById("openalertpop2").style.display = "none";
+}
+
 
 async function givelogin() {
 	console.log("login executed"); 
@@ -486,6 +494,7 @@ window.addEventListener('DOMContentLoaded', () => {
 	fetchthreefirst();  
 	hidelogin(); 
 	closealert(); 
+	openalert2(); 
 });
 
 setInterval(fetchrecentevents, 2000);
