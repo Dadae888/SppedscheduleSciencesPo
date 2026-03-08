@@ -101,6 +101,24 @@ app.use((req, res, next) => {
 
 });
 
+// Debug for database// 
+app.get("/debug-tables", async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT
+        version(),
+        current_database(),
+        inet_server_addr(),
+        inet_server_port()
+    `);
+
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "DB debug failed" });
+  }
+});
+
 app.post('/login-log', (req, res) => {
 
     const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
@@ -859,4 +877,5 @@ app.get('/privacy-policy', (req, res) => {
 app.get('/terms-of-service', (req, res) => {
   res.sendFile(__dirname + '/public/terms-of-service.html');
 });
+
 // Starting real code for uploads //
