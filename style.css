@@ -856,6 +856,215 @@ GOOGLE DISCLOSURE
   cursor: pointer;
 }
 
+/* ═══════════════════════════════════════════════════
+   MOBILE ONLY — max-width: 768px
+   Rien ici ne touche au CSS desktop existant.
+   Colle ce bloc À LA FIN de ton fichier CSS principal.
+═══════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+
+  /* ── BODY ─────────────────────────────────────── */
+  body {
+    background-attachment: scroll; /* fixed bugge sur iOS Safari */
+    font-size: 15px;
+  }
+
+  /* ── TOP BAR ──────────────────────────────────── */
+  .top-bar {
+    top: 10px;
+    padding: 0 12px;
+    gap: 8px;
+  }
+
+  .top-bar button {
+    padding: 12px 18px;
+    font-size: 13px;
+  }
+
+  /* ── LEFT / RIGHT BUTTONS ─────────────────────── */
+  .left-btn,
+  .right-btn {
+    padding: 12px 18px;
+    font-size: 13px;
+    border-radius: 10px;
+  }
+
+  /* ── WELCOME TITLE ────────────────────────────── */
+  .bienvenue-container {
+    top: 10px;
+    max-width: 55vw;         /* évite chevauchement avec les boutons latéraux */
+    padding: 4px 8px;
+    border-radius: 6px;
+  }
+
+  .bienvenue {
+    font-size: 1.1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* ── LOGO ─────────────────────────────────────── */
+  .logo {
+    width: 55px;
+    top: 65px;
+  }
+
+  /* ── RANKING WRAPPER ──────────────────────────── */
+  .ranking-wrapper {
+    padding-top: 130px;      /* laisse de la place au logo + top-bar */
+    padding-bottom: 120px;   /* laisse de la place aux boutons du bas */
+  }
+
+  /* ── RANKING TABLE ────────────────────────────── */
+  .ranking-table {
+    width: 95%;
+    font-size: 13px;
+    border-width: 3px;
+  }
+
+  .ranking-table thead {
+    font-size: 15px;
+  }
+
+  .ranking-table th,
+  .ranking-table td {
+    padding: 9px 6px;
+  }
+
+  /* ── BOTTOM BUTTON CONTAINER ──────────────────── */
+  .bottom-center-container {
+    bottom: 12px;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 0 10px;
+    width: 100%;
+    box-sizing: border-box;
+    left: 0;
+    transform: none;         /* annule translateX(-50%) — inutile avec width:100% */
+  }
+
+  /* ── BOTTOM BUTTONS ───────────────────────────── */
+  .button-reu,
+  .button-gold,
+  .bottom-btn {
+    padding: 12px 18px;
+    font-size: 15px;
+    margin: 4px;
+    border-radius: 8px;
+    /* tap feedback immédiat sur mobile */
+    -webkit-tap-highlight-color: rgba(255, 214, 0, 0.3);
+  }
+
+  /* ── GOOGLE LOGIN BUTTON ──────────────────────── */
+  .google-login-btn {
+    top: 10px;
+    right: 10px;
+    padding: 6px 10px;
+    font-size: 12px;
+    border-radius: 6px;
+  }
+
+  .google-login-btn img {
+    width: 14px;
+    height: 14px;
+  }
+
+  /* Désactive le translateX(-50%) qui ne fait pas sens ici */
+  .google-login-btn:hover {
+    transform: translateY(-2px);
+  }
+
+  /* ── VISITOR BOX ──────────────────────────────── */
+  #visitorBox {
+    bottom: auto;
+    top: 70px;           /* sous la top-bar, pas sur les boutons du bas */
+    left: 10px;
+    font-size: 13px;
+    padding: 7px 11px;
+    border-radius: 6px;
+  }
+
+  /* ── ALERT POPUP ──────────────────────────────── */
+  #openalertpop .popup-content,
+  #openalertpop2 .popup-content {
+    padding: 24px 20px;
+    max-width: 90vw;
+    border-width: 4px;
+  }
+
+  #openalertpop p,
+  #openalertpop2 p {
+    font-size: 15px;
+  }
+
+  /* ── CREDITS POPUP ────────────────────────────── */
+  .cpopup {
+    width: 88vw;
+    padding: 22px 18px;
+  }
+
+  .cpopup input {
+    width: 85%;
+    font-size: 16px;   /* évite le zoom auto iOS sur les inputs */
+  }
+
+  /* ── ATTENDERS POPUP ──────────────────────────── */
+  .attenders-popup {
+    min-width: unset;
+    width: 88vw;
+    max-width: unset;
+    padding: 18px;
+  }
+
+  #joinBtn,
+  #closeBtn {
+    padding: 10px 14px;
+    font-size: 15px;
+    /* boutons côte à côte sur mobile */
+    display: inline-block;
+    width: 44%;
+  }
+
+  /* ── GOOGLE DISCLOSURE ────────────────────────── */
+  .google-calendar-disclosure {
+    bottom: 80px;        /* au-dessus des boutons du bas */
+    right: 10px;
+    left: 10px;
+    max-width: unset;
+    font-size: 12px;
+    padding: 12px 14px;
+    border-radius: 10px;
+  }
+
+  /* ── WINNER TEXT ──────────────────────────────── */
+  #winnerTextContainer {
+    font-size: 15vw;     /* moins énorme sur petit écran */
+  }
+
+  /* ── HOVER → tactile: supprime les hover parasites ── */
+  button:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  /* Active state plus marqué pour feedback tactile */
+  button:active {
+    transform: scale(0.93);
+    opacity: 0.85;
+  }
+
+  /* ── MONEY RAIN ───────────────────────────────── */
+  .money {
+    width: 28px;
+    height: 14px;
+  }
+
+}
+/* FIN MOBILE */
+
 #openalertpop button:hover {
   text-decoration: underline;
 }
@@ -948,4 +1157,5 @@ GOOGLE DISCLOSURE
   to {
     transform: scale(1.03);
   }
+
 }
