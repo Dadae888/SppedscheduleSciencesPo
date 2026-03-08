@@ -206,7 +206,7 @@ BOTTOM BUTTON CONTAINER
 /* =================================================
 BOTTOM BUTTON STYLE
 ================================================= */
-
+.button-reu,
 .button-gold,
 .bottom-btn {
 
@@ -232,6 +232,7 @@ BOTTOM BUTTON STYLE
         0 0 30px #FFD700;
 }
 
+.button-reu:hover,
 .button-gold:hover,
 .bottom-btn:hover {
 
