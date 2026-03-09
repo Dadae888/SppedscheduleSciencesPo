@@ -1,5 +1,5 @@
 /* =================================================
-GLOBAL
+GLOBAL : mdp mymap CSS : Lolipop57
 ================================================= */
 /* Pas de flex sinon tout se centre et fixed casse*/ 
 
@@ -311,7 +311,7 @@ WELCOME TITLE
     padding: 5px 10px;
     border-radius: 5px;
 
-    z-index: 10000;
+    z-index: 10003;
 
     animation: clignote 2s linear infinite;
 }
@@ -856,215 +856,6 @@ GOOGLE DISCLOSURE
   cursor: pointer;
 }
 
-/* ═══════════════════════════════════════════════════
-   MOBILE ONLY — max-width: 768px
-   Rien ici ne touche au CSS desktop existant.
-   Colle ce bloc À LA FIN de ton fichier CSS principal.
-═══════════════════════════════════════════════════ */
-
-@media (max-width: 768px) {
-
-  /* ── BODY ─────────────────────────────────────── */
-  body {
-    background-attachment: scroll; /* fixed bugge sur iOS Safari */
-    font-size: 15px;
-  }
-
-  /* ── TOP BAR ──────────────────────────────────── */
-  .top-bar {
-    top: 10px;
-    padding: 0 12px;
-    gap: 8px;
-  }
-
-  .top-bar button {
-    padding: 12px 18px;
-    font-size: 13px;
-  }
-
-  /* ── LEFT / RIGHT BUTTONS ─────────────────────── */
-  .left-btn,
-  .right-btn {
-    padding: 12px 18px;
-    font-size: 13px;
-    border-radius: 10px;
-  }
-
-  /* ── WELCOME TITLE ────────────────────────────── */
-  .bienvenue-container {
-    top: 10px;
-    max-width: 55vw;         /* évite chevauchement avec les boutons latéraux */
-    padding: 4px 8px;
-    border-radius: 6px;
-  }
-
-  .bienvenue {
-    font-size: 1.1rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  /* ── LOGO ─────────────────────────────────────── */
-  .logo {
-    width: 55px;
-    top: 65px;
-  }
-
-  /* ── RANKING WRAPPER ──────────────────────────── */
-  .ranking-wrapper {
-    padding-top: 130px;      /* laisse de la place au logo + top-bar */
-    padding-bottom: 120px;   /* laisse de la place aux boutons du bas */
-  }
-
-  /* ── RANKING TABLE ────────────────────────────── */
-  .ranking-table {
-    width: 95%;
-    font-size: 13px;
-    border-width: 3px;
-  }
-
-  .ranking-table thead {
-    font-size: 15px;
-  }
-
-  .ranking-table th,
-  .ranking-table td {
-    padding: 9px 6px;
-  }
-
-  /* ── BOTTOM BUTTON CONTAINER ──────────────────── */
-  .bottom-center-container {
-    bottom: 12px;
-    gap: 8px;
-    flex-wrap: wrap;
-    justify-content: center;
-    padding: 0 10px;
-    width: 100%;
-    box-sizing: border-box;
-    left: 0;
-    transform: none;         /* annule translateX(-50%) — inutile avec width:100% */
-  }
-
-  /* ── BOTTOM BUTTONS ───────────────────────────── */
-  .button-reu,
-  .button-gold,
-  .bottom-btn {
-    padding: 12px 18px;
-    font-size: 15px;
-    margin: 4px;
-    border-radius: 8px;
-    /* tap feedback immédiat sur mobile */
-    -webkit-tap-highlight-color: rgba(255, 214, 0, 0.3);
-  }
-
-  /* ── GOOGLE LOGIN BUTTON ──────────────────────── */
-  .google-login-btn {
-    top: 10px;
-    right: 10px;
-    padding: 6px 10px;
-    font-size: 12px;
-    border-radius: 6px;
-  }
-
-  .google-login-btn img {
-    width: 14px;
-    height: 14px;
-  }
-
-  /* Désactive le translateX(-50%) qui ne fait pas sens ici */
-  .google-login-btn:hover {
-    transform: translateY(-2px);
-  }
-
-  /* ── VISITOR BOX ──────────────────────────────── */
-  #visitorBox {
-    bottom: auto;
-    top: 70px;           /* sous la top-bar, pas sur les boutons du bas */
-    left: 10px;
-    font-size: 13px;
-    padding: 7px 11px;
-    border-radius: 6px;
-  }
-
-  /* ── ALERT POPUP ──────────────────────────────── */
-  #openalertpop .popup-content,
-  #openalertpop2 .popup-content {
-    padding: 24px 20px;
-    max-width: 90vw;
-    border-width: 4px;
-  }
-
-  #openalertpop p,
-  #openalertpop2 p {
-    font-size: 15px;
-  }
-
-  /* ── CREDITS POPUP ────────────────────────────── */
-  .cpopup {
-    width: 88vw;
-    padding: 22px 18px;
-  }
-
-  .cpopup input {
-    width: 85%;
-    font-size: 16px;   /* évite le zoom auto iOS sur les inputs */
-  }
-
-  /* ── ATTENDERS POPUP ──────────────────────────── */
-  .attenders-popup {
-    min-width: unset;
-    width: 88vw;
-    max-width: unset;
-    padding: 18px;
-  }
-
-  #joinBtn,
-  #closeBtn {
-    padding: 10px 14px;
-    font-size: 15px;
-    /* boutons côte à côte sur mobile */
-    display: inline-block;
-    width: 44%;
-  }
-
-  /* ── GOOGLE DISCLOSURE ────────────────────────── */
-  .google-calendar-disclosure {
-    bottom: 80px;        /* au-dessus des boutons du bas */
-    right: 10px;
-    left: 10px;
-    max-width: unset;
-    font-size: 12px;
-    padding: 12px 14px;
-    border-radius: 10px;
-  }
-
-  /* ── WINNER TEXT ──────────────────────────────── */
-  #winnerTextContainer {
-    font-size: 15vw;     /* moins énorme sur petit écran */
-  }
-
-  /* ── HOVER → tactile: supprime les hover parasites ── */
-  button:hover {
-    transform: none;
-    box-shadow: none;
-  }
-
-  /* Active state plus marqué pour feedback tactile */
-  button:active {
-    transform: scale(0.93);
-    opacity: 0.85;
-  }
-
-  /* ── MONEY RAIN ───────────────────────────────── */
-  .money {
-    width: 28px;
-    height: 14px;
-  }
-
-}
-/* FIN MOBILE */
-
 #openalertpop button:hover {
   text-decoration: underline;
 }
@@ -1157,5 +948,769 @@ GOOGLE DISCLOSURE
   to {
     transform: scale(1.03);
   }
+}
 
+/* ═══════════════════════════════════════════════════════════════
+   MOBILE ONLY — max-width: 768px
+   Paste at the END of your main CSS file.
+═══════════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=DM+Sans:wght@400;500;700&display=swap');
+
+:root {
+  --m-pink:       #ff2d78;
+  --m-pink-light: #ff6fa3;
+  --m-pink-glow:  rgba(255, 45, 120, 0.4);
+  --m-gold:       #ffd600;
+  --m-gold-glow:  rgba(255, 214, 0, 0.5);
+  --m-silver:     #c8ccd8;
+  --m-bronze:     #e8935a;
+  --m-dark:       #0e0b18;
+  --m-card:       rgba(22, 16, 40, 0.88);
+  --m-glass:      rgba(255,255,255,0.07);
+  --m-border:     rgba(255,255,255,0.10);
+  --m-text:       #f2eaff;
+  --m-muted:      #9985bb;
+  --m-nav-h:      72px;
+  --m-top-h:      58px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   KEYFRAMES — defined outside @media so they work everywhere
+══════════════════════════════════════════════════════════════ */
+
+@keyframes goldPulse {
+  0%   { box-shadow: 0 0 12px rgba(255,214,0,0.5), 0 6px 24px rgba(0,0,0,0.5); }
+  50%  { box-shadow: 0 0 28px rgba(255,214,0,0.9), 0 0 50px rgba(255,214,0,0.3), 0 6px 24px rgba(0,0,0,0.5); }
+  100% { box-shadow: 0 0 12px rgba(255,214,0,0.5), 0 6px 24px rgba(0,0,0,0.5); }
+}
+
+@keyframes silverShimmer {
+  0%   { box-shadow: 0 0 8px rgba(200,204,216,0.3), 0 4px 16px rgba(0,0,0,0.45); }
+  50%  { box-shadow: 0 0 20px rgba(200,204,216,0.6), 0 4px 16px rgba(0,0,0,0.45); }
+  100% { box-shadow: 0 0 8px rgba(200,204,216,0.3), 0 4px 16px rgba(0,0,0,0.45); }
+}
+
+@keyframes bronzeGlow {
+  0%   { box-shadow: 0 0 8px rgba(232,147,90,0.3), 0 4px 16px rgba(0,0,0,0.4); }
+  50%  { box-shadow: 0 0 18px rgba(232,147,90,0.55), 0 4px 16px rgba(0,0,0,0.4); }
+  100% { box-shadow: 0 0 8px rgba(232,147,90,0.3), 0 4px 16px rgba(0,0,0,0.4); }
+}
+
+@keyframes popupPulse {
+  from { transform: scale(1);     box-shadow: 0 0 35px rgba(255,45,120,0.5),  0 0 80px rgba(255,214,0,0.15); }
+  to   { transform: scale(1.025); box-shadow: 0 0 55px rgba(255,45,120,0.75), 0 0 110px rgba(255,214,0,0.28); }
+}
+
+@keyframes crownFloat {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-3px); }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   @MEDIA BLOCK
+══════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+
+  /* ── BODY ────────────────────────────────────────────────── */
+  body {
+    background-attachment: scroll;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    color: var(--m-text);
+    -webkit-font-smoothing: antialiased;
+    overscroll-behavior: none;
+  }
+
+  /* ── TOP BAR ─────────────────────────────────────────────── */
+  .top-bar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: var(--m-top-h);
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    background: linear-gradient(180deg,
+      rgba(14,11,24,0.97) 0%,
+      rgba(14,11,24,0.85) 80%,
+      transparent 100%);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    z-index: 200;
+    border-bottom: 1px solid var(--m-border);
+  }
+
+  /* Top bar buttons: compact, text truncated */
+  .top-bar button,
+  .left-btn,
+  .right-btn {
+    flex: 1;
+    min-width: 0;           /* allows flex shrink below content size */
+    max-width: 46%;
+    padding: 7px 10px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.2px;
+    border-radius: 50px;
+    background: var(--m-glass);
+    border: 1px solid var(--m-border);
+    color: var(--m-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+    -webkit-tap-highlight-color: transparent;
+    transition: background 0.15s, transform 0.12s;
+    box-sizing: border-box;
+  }
+
+  /* First top-bar button (red in your HTML) keeps red tint */
+  .top-bar button:first-child,
+  .left-btn {
+    background: rgba(220, 30, 30, 0.25);
+    border-color: rgba(220, 30, 30, 0.45);
+    color: #ffaaaa;
+  }
+
+  /* Second top-bar button: pink */
+  .top-bar button:last-child,
+  .right-btn {
+    background: rgba(255, 45, 120, 0.2);
+    border-color: rgba(255, 45, 120, 0.4);
+    color: var(--m-pink-light);
+  }
+
+  .top-bar button:active,
+  .left-btn:active,
+  .right-btn:active {
+    transform: scale(0.92);
+    opacity: 0.8;
+  }
+
+  /* ── WELCOME BADGE — below the table, not floating on it ── */
+  .bienvenue-container {
+    /* Take it out of fixed/absolute flow — sits in the page scroll */
+    position: relative;
+    left: auto; top: auto;
+    transform: none;
+    display: block;
+    width: fit-content;
+    margin: 14px auto 6px;
+    padding: 6px 18px;
+    border-radius: 50px;
+    background: linear-gradient(135deg,
+      rgba(255,45,120,0.2) 0%,
+      rgba(255,214,0,0.1) 100%);
+    border: 1px solid rgba(255,45,120,0.35);
+    backdrop-filter: blur(8px);
+    /* Ensure popup covers it */
+    z-index: 1;
+  }
+
+  .bienvenue {
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 900;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #fff;
+    letter-spacing: 0.3px;
+  }
+
+  /* ── LOGO ────────────────────────────────────────────────── */
+  .logo {
+    width: 42px;
+    top: calc(var(--m-top-h) + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    filter: drop-shadow(0 0 10px var(--m-pink-glow));
+    z-index: 150;
+  }
+
+  /* ── MAIN SCROLL AREA ────────────────────────────────────── */
+  .ranking-wrapper {
+    padding-top: calc(var(--m-top-h) + 10px);
+    padding-bottom: calc(var(--m-nav-h) + 20px);
+    padding-left: 12px;
+    padding-right: 12px;
+    min-height: 100dvh;
+    box-sizing: border-box;
+  }
+
+  /* ── FOOTER: in-flow, always visible above nav bar ──────── */
+  body footer {
+    position: relative !important;
+    bottom: auto !important;
+    right: auto !important;
+    left: auto !important;
+    text-align: center;
+    padding: 14px 16px 20px;
+    margin-top: 6px;
+    font-size: 0.72em;
+    color: #6bb8ff !important;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 12px;
+    z-index: 1 !important;
+    line-height: 1.8;
+  }
+
+  body footer a,
+  body footer a:link,
+  body footer a:visited {
+    color: #0000FF !important;
+    text-decoration: none !important;
+  }
+
+  body footer a:active {
+    opacity: 0.7;
+  }
+
+  /* ── EVENTBOX — hidden on mobile (overlaps everything) ───── */
+  #eventBox {
+    display: none !important;
+  }
+
+  /* ── RANKING: card list ──────────────────────────────────── */
+  .ranking-table thead {
+    display: none;
+  }
+
+  .ranking-table {
+    width: 100%;
+    border: none;
+    border-collapse: collapse;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .ranking-table tbody tr {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+    padding: 13px 14px;
+    border-radius: 16px;
+    background: var(--m-card);
+    border: 1px solid var(--m-border);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.35);
+    transition: transform 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .ranking-table tbody tr:active {
+    transform: scale(0.98);
+  }
+
+  /* ── TOP 3: spectacular treatment ───────────────────────── */
+
+  /* 🥇 1st place */
+  .ranking-table tbody tr:nth-child(1) {
+    border: 2px solid var(--m-gold);
+    background: linear-gradient(110deg,
+      rgba(255,214,0,0.18) 0%,
+      rgba(255,180,0,0.08) 40%,
+      var(--m-card) 70%);
+    animation: goldPulse 2.5s ease-in-out infinite;
+    padding: 17px 16px;   /* slightly taller */
+    border-radius: 20px;
+    position: relative;
+  }
+
+  /* Crown emoji injected via pseudo */
+  .ranking-table tbody tr:nth-child(1)::before {
+    content: '👑';
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 20px;
+    animation: crownFloat 2s ease-in-out infinite;
+    filter: drop-shadow(0 2px 6px rgba(255,214,0,0.8));
+    line-height: 1;
+  }
+
+  /* 1st rank number */
+  .ranking-table tbody tr:nth-child(1) td:first-child {
+    color: var(--m-gold) !important;
+    font-size: 28px !important;
+    text-shadow: 0 0 14px rgba(255,214,0,0.8);
+  }
+
+  /* 1st name */
+  .ranking-table tbody tr:nth-child(1) td:nth-child(2) {
+    font-size: 16px !important;
+    color: #fff !important;
+    text-shadow: 0 0 10px rgba(255,214,0,0.4);
+  }
+
+  /* 1st score pill */
+  .ranking-table tbody tr:nth-child(1) td:last-child {
+    background: linear-gradient(135deg, #ffd600, #ffb300) !important;
+    color: #1a0a00 !important;
+    border: none !important;
+    font-size: 16px !important;
+    box-shadow: 0 2px 12px rgba(255,214,0,0.6);
+  }
+
+  /* 🥈 2nd place */
+  .ranking-table tbody tr:nth-child(2) {
+    border: 2px solid var(--m-silver);
+    background: linear-gradient(110deg,
+      rgba(200,204,216,0.14) 0%,
+      rgba(180,185,200,0.06) 40%,
+      var(--m-card) 70%);
+    animation: silverShimmer 3s ease-in-out infinite;
+    border-radius: 18px;
+  }
+
+  .ranking-table tbody tr:nth-child(2) td:first-child {
+    color: var(--m-silver) !important;
+    font-size: 24px !important;
+    text-shadow: 0 0 10px rgba(200,204,216,0.6);
+  }
+
+  .ranking-table tbody tr:nth-child(2) td:last-child {
+    background: rgba(200,204,216,0.15) !important;
+    border-color: rgba(200,204,216,0.4) !important;
+    color: var(--m-silver) !important;
+  }
+
+  /* 🥉 3rd place */
+  .ranking-table tbody tr:nth-child(3) {
+    border: 2px solid var(--m-bronze);
+    background: linear-gradient(110deg,
+      rgba(232,147,90,0.13) 0%,
+      rgba(205,127,50,0.06) 40%,
+      var(--m-card) 70%);
+    animation: bronzeGlow 3.5s ease-in-out infinite;
+    border-radius: 18px;
+  }
+
+  .ranking-table tbody tr:nth-child(3) td:first-child {
+    color: var(--m-bronze) !important;
+    font-size: 22px !important;
+    text-shadow: 0 0 10px rgba(232,147,90,0.5);
+  }
+
+  .ranking-table tbody tr:nth-child(3) td:last-child {
+    background: rgba(232,147,90,0.12) !important;
+    border-color: rgba(232,147,90,0.35) !important;
+    color: var(--m-bronze) !important;
+  }
+
+  /* ── ALL CELLS ───────────────────────────────────────────── */
+  .ranking-table tbody td {
+    display: inline;
+    padding: 0;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--m-text);
+    line-height: 1.3;
+  }
+
+  /* Rank number */
+  .ranking-table tbody td:first-child {
+    font-family: 'Nunito', sans-serif;
+    font-size: 20px;
+    font-weight: 900;
+    color: var(--m-pink);
+    min-width: 32px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  /* Name */
+  .ranking-table tbody td:nth-child(2) {
+    flex: 1;
+    font-weight: 700;
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Score pill */
+  .ranking-table tbody td:last-child {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 900;
+    font-size: 14px;
+    color: var(--m-gold);
+    background: rgba(255,214,0,0.1);
+    border: 1px solid rgba(255,214,0,0.28);
+    padding: 4px 11px;
+    border-radius: 50px;
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+
+  /* Middle columns */
+  .ranking-table tbody td:not(:first-child):not(:nth-child(2)):not(:last-child) {
+    font-size: 12px;
+    color: var(--m-muted);
+    flex-shrink: 0;
+  }
+
+  /* ── BOTTOM NAV BAR ──────────────────────────────────────── */
+  .bottom-center-container {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    height: var(--m-nav-h);
+    padding: 0 4px env(safe-area-inset-bottom, 8px);
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 0;
+    flex-wrap: nowrap;
+    background: rgba(12, 9, 22, 0.97);
+    border-top: 1px solid rgba(255,45,120,0.3);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    z-index: 300;
+    transform: none !important;
+    width: 100% !important;
+  }
+
+  .button-reu,
+  .button-gold,
+  .bottom-btn {
+    flex: 1;
+    height: 56px;
+    max-width: 33%;         /* 3 buttons share equally */
+    margin: 0;
+    padding: 5px 3px 3px;
+    border-radius: 12px;
+    border: none;
+    background: transparent;
+    color: var(--m-muted);
+    font-family: 'Nunito', sans-serif;
+    font-size: 9px;          /* small enough to never overflow */
+    font-weight: 900;
+    letter-spacing: 0px;
+    line-height: 1.2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    text-transform: uppercase;
+    text-align: center;
+    word-break: break-word;
+    overflow: hidden;
+    transition: color 0.15s, background 0.15s, transform 0.12s;
+    position: relative;
+    box-sizing: border-box;
+  }
+
+  /* Coloured indicator bar above label */
+  .button-reu::before,
+  .button-gold::before,
+  .bottom-btn::before {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 3px;
+    border-radius: 2px;
+    margin-bottom: 3px;
+    flex-shrink: 0;
+  }
+
+  .button-reu {
+    color: var(--m-pink);
+  }
+  .button-reu::before {
+    background: var(--m-pink);
+    box-shadow: 0 0 10px var(--m-pink-glow);
+  }
+
+  .button-gold {
+    color: var(--m-gold);
+  }
+  .button-gold::before {
+    background: var(--m-gold);
+    box-shadow: 0 0 8px rgba(255,214,0,0.5);
+  }
+
+  .bottom-btn::before {
+    background: var(--m-muted);
+    opacity: 0.45;
+  }
+
+  .button-reu:active,
+  .button-gold:active,
+  .bottom-btn:active {
+    transform: scale(0.88);
+    background: var(--m-glass);
+  }
+
+  /* ── GOOGLE LOGIN ────────────────────────────────────────── */
+  .google-login-btn {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    padding: 6px 10px;
+    font-size: 11px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    border-radius: 50px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.16);
+    color: #fff;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    z-index: 210;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .google-login-btn img { width: 13px; height: 13px; }
+  .google-login-btn:hover  { transform: none; }
+  .google-login-btn:active {
+    transform: scale(0.93);
+    background: rgba(255,45,120,0.18);
+  }
+
+  /* ── VISITOR BOX ─────────────────────────────────────────── */
+  #visitorBox {
+    position: fixed;
+    top: calc(var(--m-top-h) + 6px);
+    left: 12px;
+    bottom: auto;
+    font-size: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 50px;
+    background: rgba(255,45,120,0.12);
+    border: 1px solid rgba(255,45,120,0.25);
+    color: var(--m-pink-light);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 190;
+  }
+
+  /* ── GOOGLE CALENDAR DISCLOSURE ──────────────────────────── */
+  /* Not fixed — sits in scroll flow inside ranking-wrapper */
+  .google-calendar-disclosure {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    right: auto;
+    max-width: 100%;
+    font-size: 10.5px;
+    line-height: 1.5;
+    font-family: 'DM Sans', sans-serif;
+    padding: 10px 13px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: var(--m-muted);
+    margin-top: 10px;
+    z-index: 1;
+  }
+
+  /* ── ALERT POPUPS — z-index above everything ─────────────── */
+  #openalertpop {
+    z-index: 9000 !important;
+  }
+
+  #openalertpop2 {
+    z-index: 9100 !important;
+  }
+
+  #openalertpop .popup-content,
+  #openalertpop2 .popup-content {
+    padding: 28px 20px;
+    max-width: 88vw;
+    border-radius: 22px;
+    border: 3px solid var(--m-pink);
+    background: rgba(18,12,34,0.98);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    box-shadow:
+      0 0 40px var(--m-pink-glow),
+      0 20px 60px rgba(0,0,0,0.75);
+  }
+
+  #openalertpop p,
+  #openalertpop2 p {
+    font-size: 14px;
+    color: var(--m-text);
+    line-height: 1.65;
+  }
+
+  /* ── CREDITS POPUP ───────────────────────────────────────── */
+  .cpopup {
+    width: 88vw;
+    max-width: 370px;
+    padding: 26px 18px;
+    border-radius: 22px;
+    background: rgba(18,12,34,0.97);
+    border: 2px solid rgba(255,45,120,0.4);
+    backdrop-filter: blur(20px);
+  }
+
+  .cpopup input {
+    width: 85%;
+    font-size: 16px;
+    font-family: 'DM Sans', sans-serif;
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: #fff;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .cpopup input:focus {
+    border-color: var(--m-pink);
+    box-shadow: 0 0 0 3px var(--m-pink-glow);
+  }
+
+  /* ── ATTENDERS POPUP ─────────────────────────────────────── */
+  .attenders-popup {
+    min-width: unset;
+    width: 88vw;
+    max-width: unset;
+    padding: 22px 16px;
+    border-radius: 22px;
+    background: rgba(18,12,34,0.97);
+    border: 2px solid rgba(255,45,120,0.35);
+    backdrop-filter: blur(20px);
+  }
+
+  #joinBtn,
+  #closeBtn {
+    padding: 12px 8px;
+    font-size: 13px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    display: inline-block;
+    width: 44%;
+    border-radius: 14px;
+    border: none;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.12s;
+  }
+
+  #joinBtn {
+    background: linear-gradient(135deg, var(--m-pink), var(--m-pink-light));
+    color: #fff;
+    box-shadow: 0 6px 18px var(--m-pink-glow);
+  }
+
+  #closeBtn {
+    background: var(--m-glass);
+    border: 1px solid var(--m-border);
+    color: var(--m-muted);
+  }
+
+  #joinBtn:active  { transform: scale(0.92); }
+  #closeBtn:active { transform: scale(0.92); }
+
+  /* ── WINNER TEXT ─────────────────────────────────────────── */
+  #winnerTextContainer {
+    font-family: 'Nunito', sans-serif;
+    font-size: 13vw;
+    font-weight: 900;
+    letter-spacing: -1px;
+    background: linear-gradient(135deg, #fff 10%, var(--m-pink) 55%, var(--m-gold) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 24px var(--m-pink-glow));
+  }
+
+  /* ── MONEY RAIN ──────────────────────────────────────────── */
+  .money {
+    width: 26px;
+    height: 13px;
+    filter: drop-shadow(0 2px 6px rgba(255,214,0,0.5));
+  }
+
+  /* ── GLOBAL BUTTON RESET ─────────────────────────────────── */
+  button:hover  { transform: none; box-shadow: none; }
+  button:active { transform: scale(0.92); opacity: 0.85; }
+
+} /* END @MEDIA */
+
+
+/* ═══════════════════════════════════════════════════════════════
+   OUT-OF-MEDIA: Popup overlays (desktop + mobile)
+═══════════════════════════════════════════════════════════════ */
+
+#openalertpop {
+  position: fixed;
+  inset: 0;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0,0,0,0.82);
+  backdrop-filter: blur(4px);
+  z-index: 9000;
+  font-family: 'DM Sans', Arial, sans-serif;
+}
+
+#openalertpop2 {
+  position: fixed;
+  inset: 0;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0,0,0,0.58);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 9100;
+}
+
+#openalertpop2 .popup-content {
+  background: #110d22;
+  padding: 40px 46px;
+  max-width: 560px;
+  width: 90vw;
+  text-align: center;
+  border-radius: 22px;
+  border: 4px solid #ff2d78;
+  box-shadow:
+    0 0 40px rgba(255,45,120,0.55),
+    0 0 90px rgba(255,214,0,0.18),
+    0 24px 64px rgba(0,0,0,0.75);
+  animation: popupPulse 2.4s ease-in-out infinite alternate;
+}
+
+#openalertpop2 p {
+  font-size: 17px;
+  line-height: 1.65;
+  color: #f0e8ff;
+  font-family: 'DM Sans', sans-serif;
+}
+
+#openalertpop2 button {
+  margin-top: 20px;
+  background: none;
+  border: none;
+  font-size: 12px;
+  color: #8878a0;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+}
+
+#openalertpop2 button:hover,
+#openalertpop  button:hover {
+  text-decoration: underline;
+  color: #ff6fa3;
 }
