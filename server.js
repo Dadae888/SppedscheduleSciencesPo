@@ -223,7 +223,7 @@ app.get('/auth/google',
 		scope : [
 			'profile',
 			'email', 
-			'https://www.googleapis.com/auth/calendar.events'
+			'https://www.googleapis.com/auth/calendar.events',
 			'https://www.googleapis.com/auth/calendar.readonly'
 			]
 	}) 
@@ -266,6 +266,7 @@ app.get('/auth/google',
 app.get('/auth/google/callback', 
 	passport.authenticate('google', { failureRedirect: '/' }),
 	(req, res) => {
+	console.log("passport ran"); 
     // User is logged in at this point
     res.redirect('/calendar'); // <-- redirect to the calendar page, be careful, here it is a route not a filepath, so calendar route must be defined// 
 	}
@@ -992,6 +993,7 @@ app.post('/api/page5events', async (req, res) => {
     res.status(500).json({ error: "Database error" });
   }
 });
+
 
 
 
