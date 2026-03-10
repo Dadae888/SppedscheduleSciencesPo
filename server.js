@@ -224,6 +224,7 @@ app.get('/auth/google',
 			'profile',
 			'email', 
 			'https://www.googleapis.com/auth/calendar.events'
+			'https://www.googleapis.com/auth/calendar.readonly'
 			]
 	}) 
 ); 
@@ -991,6 +992,7 @@ app.post('/api/page5events', async (req, res) => {
     res.status(500).json({ error: "Database error" });
   }
 });
+
 
 
 
