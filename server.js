@@ -275,7 +275,8 @@ app.get('/auth/google/callback',
 // Creating redirection route// 
 app.get('/calendar', (req,res) => {
 	if (!req.user) return res.redirect('/'); // That's my homepage// Return ensures rest of the route is not executed// 
-	console.log("calendar called"); 
+	console.log("calendar called
+	res.send("Calendar page loaded successfully");
 }); 
 
 
@@ -993,6 +994,7 @@ app.post('/api/page5events', async (req, res) => {
     res.status(500).json({ error: "Database error" });
   }
 });
+
 
 
 
