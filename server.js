@@ -177,7 +177,7 @@ passport.use(new GoogleStrategy(
 { //giving first parameter ; configuration id// 
 	clientID: CLIENT_ID,
     clientSecret: CLIENT_SECRET,
-    callbackURL: 'http://localhost:8000/auth/google/callback' // That's where google redirects, it must match exactly// 
+    callbackURL: 'https://speedschedulesciencespo.fr/oauth/google/callback' // That's where google redirects, it must match exactly// 
 }, 
 // Now second parameter : callback function : it is a function that runs for every request going through that path ; in express call back function always has req, res, and next (allows to move on to next middleware//
 // this functions runs after login and allowing permissions and google sendback// 
@@ -991,4 +991,5 @@ app.post('/api/page5events', async (req, res) => {
     res.status(500).json({ error: "Database error" });
   }
 });
+
 
